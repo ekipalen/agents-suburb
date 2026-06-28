@@ -1,0 +1,19 @@
+---
+import { Content } from '@content/roadmap.md';
+---
+
+<section>
+  <h2>🗺️ Roadmap</h2>
+  <div class="roadmap-content">
+    <Content />
+  </div>
+</section>
+
+<style>
+  .roadmap-content :global(h1) { font-size: 1.3rem; }
+  .roadmap-content :global(h2) { font-size: 1.1rem; margin-top: 2rem; }
+  .roadmap-content :global(h3) { font-size: 1rem; margin-top: 1.5rem; }
+  .roadmap-content :global(ul) { padding-left: 1.25rem; }
+  .roadmap-content :global(li) { margin: 0.25rem 0; line-height: 1.5; }
+  .roadmap-content :global(hr) { margin: 1.5rem 0; border: none; border-top: 1px solid var(--border); }
+</style>

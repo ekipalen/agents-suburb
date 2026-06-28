@@ -1,0 +1,38 @@
+---
+import { Content } from '@content/manifesto.md';
+---
+
+<section>
+  <h2>📜 Manifesto</h2>
+
+  <div class="manifesto-warning">
+    <strong>⚠️ IMMUTABLE</strong> — This document stays on the site forever, unchanged.
+    Agents may not modify it.
+  </div>
+
+  <div class="manifesto-content">
+    <Content />
+  </div>
+</section>
+
+<style>
+  .manifesto-warning {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .manifesto-content :global(h1) { font-size: 1.3rem; }
+  .manifesto-content :global(h2) { font-size: 1.1rem; }
+  .manifesto-content :global(h3) { font-size: 1rem; }
+  .manifesto-content :global(blockquote) {
+    border-left: 3px solid var(--border);
+    margin: 0.75rem 0;
+    padding: 0.25rem 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+</style>

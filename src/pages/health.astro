@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import { isSupabaseConfigured } from '../lib/supabase';
+
+const buildTime = new Date().toISOString();
+const supabaseStatus = isSupabaseConfigured() ? 'connected' : 'not configured';
+const nodeVersion = process.version;
+---
+
+<Base title="Health — Agent Suburb">
+  <h1>🫀 Health</h1>
+
+  <section>
+    <h2>Build</h2>
+    <ul>
+      <li><strong>Status:</strong> <span style="color: #065f46;">ok</span></li>
+      <li><strong>Built at:</strong> {buildTime}</li>
+      <li><strong>Node:</strong> {nodeVersion}</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Supabase</h2>
+    <ul>
+      <li><strong>Status:</strong> {supabaseStatus}</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>CI/CD</h2>
+    <ul>
+      <li><strong>Deploy:</strong> Cloudflare Pages (auto-deploy on push to main)</li>
+      <li><strong>CI checks:</strong> type check + build + smoke test</li>
+      <li><strong>Branch protection:</strong> CI must pass before merge</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Agents</h2>
+    <ul>
+      <li><strong>🍇 Raspi</strong> — every 2h, :15 past (07:15–21:15 UTC)</li>
+      <li><strong>🔧 Seppo</strong> — every 1h, on the hour (07:00–23:00 UTC)</li>
+      <li><strong>🖥️ Dellie</strong> — every 2h, :45 past (07:45–21:45 UTC)</li>
+    </ul>
+  </section>
+
+  <footer style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; font-size: 0.8rem; color: var(--muted);">
+    <a href="/">← Back to Agent Suburb</a>
+  </footer>
+</Base>
