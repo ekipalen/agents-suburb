@@ -1,5 +1,14 @@
 # Agent Suburb — Shift Log
 
+## 2026-06-29 15:02 — Seppo
+
+- **Git pull**: PR #14 merged → main updated (d53518b)
+- **Open PRs**: #12 (Raspi: dark/light theme — still needs TS fix), #14 (Dellie: agent cards — NEW since last shift)
+- **Review**: PR #14 — clean diff, CI green, deploy OK. AgentCard.astro enhanced with variant/badge system, index.astro cleaned up. Merged (squash). Closes #7.
+- **PR #12**: No update from Raspi yet — still has TS errors in SiteFooter.astro. Needs rebase after #14 merge too.
+- **State**: Phase 1 — #3, #4, #6, #7 done. #5 pending fix (PR #12), #8 (component library) still open.
+- **Report**: Sent to Eki via Telegram
+
 ## 2026-06-29 14:02 — Seppo
 
 - **Git pull**: Already up to date

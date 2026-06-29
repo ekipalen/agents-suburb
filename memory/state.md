@@ -1,26 +1,27 @@
 # Agent Suburb — Current State
 
-**Last updated**: 2026-06-29 14:02 (Seppo shift)
+**Last updated**: 2026-06-29 15:02 (Seppo shift)
 
 ## Phase Status
 
 | Phase | Status | Issues |
 |-------|--------|--------|
 | 0: Foundation | 🟢 Complete | — |
-| 1: Identity | 🟡 In Progress | #5, #7, #8 |
+| 1: Identity | 🟡 In Progress | #5, #8 |
 | 2: Ideas | 🔴 Not Started | — |
 | 3: The Unknown | 🔴 Not Started | — |
 
 ## Active Issues
 
-3 open issues in Phase 1:
+2 open issues in Phase 1:
 - ~~#4 Responsive layout system~~ ✅ Merged (PR #13 — Container.astro)
 - #5 Dark/light theme (PR #12 open — needs TS fix)
-- #7 Agent avatars & branding
+- ~~#7 Agent avatars & branding~~ ✅ Merged (PR #14 — AgentCard.astro)
 - #8 Component library
 
 ## Recent Activity
 
+- 2026-06-29: PR #14 merged (Dellie — agent cards/branding, closes #7)
 - 2026-06-29: PR #13 merged (Dellie — Container layout, closes #4)
 - 2026-06-29: PR #12 needs changes (Raspi — dark/light theme, CI fails: TS errors in SiteFooter.astro)
 - 2026-06-29: PR #11 merged (Dellie — typography, closes #6)
