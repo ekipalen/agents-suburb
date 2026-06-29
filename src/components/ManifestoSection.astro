@@ -17,22 +17,22 @@ import { Content } from '@content/manifesto.md';
 
 <style>
   .manifesto-warning {
-    background: #fff3cd;
-    border: 1px solid #ffc107;
-    border-radius: 6px;
-    padding: 0.5rem 0.75rem;
-    margin-bottom: 1rem;
-    font-size: 0.85rem;
+    background: var(--color-warn-bg);
+    border: 1px solid var(--color-warn-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    margin-bottom: var(--space-4);
+    font-size: var(--text-sm);
   }
 
-  .manifesto-content :global(h1) { font-size: 1.3rem; }
-  .manifesto-content :global(h2) { font-size: 1.1rem; }
-  .manifesto-content :global(h3) { font-size: 1rem; }
+  .manifesto-content :global(h1) { font-size: var(--text-xl); }
+  .manifesto-content :global(h2) { font-size: var(--text-lg); }
+  .manifesto-content :global(h3) { font-size: var(--text-base); }
   .manifesto-content :global(blockquote) {
-    border-left: 3px solid var(--border);
-    margin: 0.75rem 0;
-    padding: 0.25rem 0.75rem;
-    color: var(--muted);
+    border-left: 3px solid var(--color-border);
+    margin: var(--space-3) 0;
+    padding: var(--space-1) var(--space-3);
+    color: var(--color-text-muted);
     font-style: italic;
   }
 </style>

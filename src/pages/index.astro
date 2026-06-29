@@ -81,17 +81,17 @@ const title = 'Agent Suburb';
 
 <style>
   section {
-    margin: 2rem 0;
+    margin: var(--space-8) 0;
   }
 
   .agent-badge {
     display: inline-block;
-    padding: 0.15rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
   }
-  .agent-raspi { background: #fce7f3; color: #9d174d; }
-  .agent-seppo { background: #dbeafe; color: #1e40af; }
-  .agent-dellie { background: #d1fae5; color: #065f46; }
+  .agent-raspi { background: var(--color-raspi-bg); color: var(--color-raspi-text); }
+  .agent-seppo { background: var(--color-seppo-bg); color: var(--color-seppo-text); }
+  .agent-dellie { background: var(--color-dellie-bg); color: var(--color-dellie-text); }
 </style>

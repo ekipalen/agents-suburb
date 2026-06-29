@@ -1,0 +1,187 @@
+/*
+ * Design Tokens — Agent Suburb
+ *
+ * Central design token file. All visual values originate here.
+ * Components reference tokens via var(--...), never raw values.
+ *
+ * Structure: colors → typography → spacing → layout → visual → theme
+ *
+ * For dark theme: override semantic color vars inside @media (prefers-color-scheme: dark)
+ * or on html.dark / :root.dark selector. Raw palette vars stay the same.
+ */
+
+/* ==========================================================================
+   COLORS — Raw palette (HSL-friendly neutrals + brand accents)
+   ========================================================================== */
+
+:root {
+  /* Neutrals */
+  --color-neutral-50:  #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+  --color-neutral-950: #0a0a0a;
+
+  /* Brand — blue */
+  --color-blue-50:  #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-blue-800: #1e40af;
+
+  /* Warn — amber */
+  --color-amber-50:  #fffbeb;
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+  --color-amber-700: #b45309;
+
+  /* Success — emerald (Dellie brand) */
+  --color-emerald-50:  #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-500: #10b981;
+  --color-emerald-700: #047857;
+
+  /* Berry — Raspi brand */
+  --color-pink-50:  #fdf2f8;
+  --color-pink-100: #fce7f3;
+  --color-pink-700: #be185d;
+  --color-pink-800: #9d174d;
+}
+
+/* ==========================================================================
+   COLORS — Semantic (theme-aware: override these for dark mode)
+   ========================================================================== */
+
+:root {
+  /* Surface */
+  --color-bg:           var(--color-neutral-50);
+  --color-bg-muted:     var(--color-neutral-100);
+  --color-code-bg:      var(--color-neutral-100);
+
+  /* Text */
+  --color-text:         var(--color-neutral-900);
+  --color-text-muted:   var(--color-neutral-500);
+  --color-text-subtle:  var(--color-neutral-400);
+
+  /* Borders */
+  --color-border:       var(--color-neutral-200);
+  --color-border-heavy: var(--color-neutral-300);
+
+  /* Accent */
+  --color-accent:       var(--color-blue-600);
+  --color-accent-hover: var(--color-blue-700);
+
+  /* Feedback */
+  --color-warn-bg:      var(--color-amber-50);
+  --color-warn-border:  var(--color-amber-500);
+  --color-warn-text:    var(--color-amber-700);
+}
+
+/* ==========================================================================
+   COLORS — Agent brand
+   ========================================================================== */
+
+:root {
+  --color-raspi-bg:    var(--color-pink-100);
+  --color-raspi-text:  var(--color-pink-800);
+  --color-seppo-bg:    var(--color-blue-100);
+  --color-seppo-text:  var(--color-blue-800);
+  --color-dellie-bg:   var(--color-emerald-100);
+  --color-dellie-text: var(--color-emerald-700);
+}
+
+/* ==========================================================================
+   TYPOGRAPHY
+   ========================================================================== */
+
+:root {
+  /* Families */
+  --font-sans:  system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:  'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+
+  /* Scale — major third (1.25) */
+  --text-xs:    0.75rem;    /* 12px */
+  --text-sm:    0.875rem;   /* 14px */
+  --text-base:  1rem;       /* 16px */
+  --text-lg:    1.125rem;   /* 18px */
+  --text-xl:    1.25rem;    /* 20px */
+  --text-2xl:   1.5rem;     /* 24px */
+  --text-3xl:   1.875rem;   /* 30px */
+  --text-4xl:   2.25rem;    /* 36px */
+
+  /* Line heights */
+  --leading-tight:   1.25;
+  --leading-normal:  1.6;
+  --leading-relaxed: 1.75;
+
+  /* Weights */
+  --weight-normal:   400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* Heading sizes (aliases) */
+  --heading-1: var(--text-3xl);
+  --heading-2: var(--text-2xl);
+  --heading-3: var(--text-xl);
+  --heading-4: var(--text-lg);
+}
+
+/* ==========================================================================
+   SPACING — 4px baseline grid
+   ========================================================================== */
+
+:root {
+  --space-0:   0;
+  --space-1:   0.25rem;   /* 4px  */
+  --space-2:   0.5rem;    /* 8px  */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+}
+
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+
+:root {
+  --content-width:    45rem;    /* 720px — readable line length */
+  --content-width-lg: 60rem;    /* 960px — wider layouts */
+
+  /* Breakpoints (documented, used in @media queries) */
+  /* --bp-sm: 480px */
+  /* --bp-md: 768px */
+  /* --bp-lg: 1024px */
+}
+
+/* ==========================================================================
+   VISUAL — Radii, shadows, transitions
+   ========================================================================== */
+
+:root {
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.06);
+
+  --transition-fast:   150ms ease;
+  --transition-normal:  200ms ease;
+}
