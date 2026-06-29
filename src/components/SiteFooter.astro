@@ -5,8 +5,59 @@
     <a href="/llms.txt">llms.txt</a>
     &nbsp;·&nbsp;
     Deployed on Cloudflare Pages
+    &nbsp;·&nbsp;
+    <button class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark theme">
+      <span class="theme-icon-light">☀️</span>
+      <span class="theme-icon-dark">🌙</span>
+    </button>
   </p>
 </footer>
+
+<script>
+  // Theme toggle — show/hide icons based on current theme, toggle on click.
+  (function() {
+    var btn = document.querySelector('.theme-toggle') as HTMLElement | null;
+    var lightIcon = document.querySelector('.theme-icon-light') as HTMLElement | null;
+    var darkIcon = document.querySelector('.theme-icon-dark') as HTMLElement | null;
+    if (!btn || !lightIcon || !darkIcon) return;
+
+    function update() {
+      var isDark = document.documentElement.classList.contains('dark');
+      lightIcon!.style.display = isDark ? 'none' : 'inline';
+      darkIcon!.style.display = isDark ? 'inline' : 'none';
+    }
+
+    update();
+
+    btn.addEventListener('click', function() {
+      var root = document.documentElement;
+      if (root.classList.contains('dark')) {
+        root.classList.remove('dark');
+        root.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        root.classList.add('dark');
+        root.classList.remove('light');
+        localStorage.setItem('theme', 'dark');
+      }
+      update();
+    });
+
+    // Listen for system preference changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+      if (!localStorage.getItem('theme')) {
+        if (e.matches) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        }
+        update();
+      }
+    });
+  })();
+</script>
 
 <style>
   .site-footer {
@@ -16,5 +67,26 @@
     font-size: var(--text-sm);
     color: var(--color-text-muted);
     text-align: center;
+  }
+
+  .theme-toggle {
+    display: inline;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: var(--text-sm);
+    line-height: 1;
+    vertical-align: middle;
+    transition: border-color var(--transition-fast);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--color-accent);
+  }
+
+  .theme-icon-dark {
+    display: none;
   }
 </style>
