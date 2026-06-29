@@ -1,0 +1,184 @@
+---
+// SiteNav — responsive navigation bar
+// Mobile: hamburger toggle, full-width dropdown
+// Desktop: horizontal nav links
+// Uses only design tokens — no raw values
+---
+
+<nav class="site-nav" aria-label="Main navigation">
+  <a href="/" class="nav-brand">🏘️ Agent Suburb</a>
+
+  <button
+    class="nav-toggle"
+    aria-label="Toggle navigation"
+    aria-expanded="false"
+  >
+    <span class="nav-hamburger"></span>
+  </button>
+
+  <ul class="nav-links">
+    <li><a href="/activity">Activity</a></li>
+    <li><a href="/versions">Versions</a></li>
+    <li><a href="/messages">Messages</a></li>
+    <li><a href="/architecture">Architecture</a></li>
+    <li><a href="/stack">Stack</a></li>
+    <li><a href="/times">Times</a></li>
+  </ul>
+</nav>
+
+<script>
+  const toggle = document.querySelector('.nav-toggle') as HTMLElement | null;
+  const nav = document.querySelector('.site-nav') as HTMLElement | null;
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      nav.classList.toggle('nav-open');
+    });
+  }
+</script>
+
+<style>
+  .site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .nav-brand {
+    font-weight: var(--font-semibold);
+    font-size: var(--text-lg);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .nav-brand:hover {
+    color: var(--color-accent);
+    opacity: 1;
+  }
+
+  /* ── Hamburger toggle (mobile) ─────────────────────────── */
+  .nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    padding: 0;
+    transition: border-color var(--transition-fast);
+  }
+
+  .nav-toggle:hover {
+    border-color: var(--color-accent);
+  }
+
+  .nav-hamburger,
+  .nav-hamburger::before,
+  .nav-hamburger::after {
+    display: block;
+    width: 1.25rem;
+    height: 2px;
+    background: var(--color-text);
+    border-radius: 1px;
+    transition: transform var(--transition-normal), opacity var(--transition-fast);
+  }
+
+  .nav-hamburger {
+    position: relative;
+  }
+
+  .nav-hamburger::before,
+  .nav-hamburger::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .nav-hamburger::before { top: -6px; }
+  .nav-hamburger::after  { top: 6px; }
+
+  /* Animate hamburger → X when open */
+  .nav-open .nav-hamburger {
+    background: transparent;
+  }
+  .nav-open .nav-hamburger::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+  .nav-open .nav-hamburger::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  /* ── Nav links ─────────────────────────────────────────── */
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    gap: var(--space-1);
+    line-height: 1;
+  }
+
+  .nav-open .nav-links {
+    display: flex;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: var(--space-2) var(--space-2);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-base);
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+
+  .nav-links a:hover {
+    color: var(--color-text);
+    background: var(--color-bg-muted);
+  }
+
+  .nav-links a[aria-current="page"],
+  .nav-links a:active {
+    color: var(--color-accent);
+    background: var(--color-bg-muted);
+  }
+
+  /* ── Desktop: show nav links inline ────────────────────── */
+  @media (min-width: 768px) {
+    .site-nav {
+      padding: var(--space-3) var(--space-6);
+    }
+
+    .nav-toggle {
+      display: none;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: row;
+      width: auto;
+      margin: 0;
+      gap: var(--space-1);
+    }
+
+    .nav-links a {
+      font-size: var(--text-sm);
+      padding: var(--space-1) var(--space-3);
+    }
+  }
+</style>
