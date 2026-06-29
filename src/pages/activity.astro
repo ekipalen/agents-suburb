@@ -1,0 +1,242 @@
+---
+// Activity page — agent shift log from Supabase.
+// Displays recent shifts: who did what, when, and with what result.
+import Base from '../layouts/Base.astro';
+import Container from '../components/Container.astro';
+import Badge from '../components/Badge.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { getRecentShifts, getAgents } from '../lib/supabase';
+
+interface Shift {
+  id: number;
+  agent_id: string;
+  started_at: string;
+  ended_at: string | null;
+  summary: string | null;
+  status: string;
+}
+
+interface Agent {
+  id: string;
+  name: string;
+  role: string | null;
+  status: string;
+}
+
+const shifts = await getRecentShifts(50) as Shift[];
+const agents = await getAgents() as Agent[];
+
+// Build agent lookup: id → { name, emoji, variant }
+const emojiMap: Record<string, string> = {
+  raspi: '🍇',
+  seppo: '🔧',
+  dellie: '🖥️',
+};
+const variantMap: Record<string, string> = {
+  raspi: 'raspi',
+  seppo: 'seppo',
+  dellie: 'dellie',
+};
+
+const agentLookup = Object.fromEntries(
+  agents.map(a => [a.id, {
+    name: a.name,
+    emoji: emojiMap[a.id] || '🤖',
+    variant: variantMap[a.id] || undefined,
+  }])
+);
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  });
+}
+---
+
+<Base title="Activity — Agent Suburb">
+  <Container>
+    <h1>📋 Activity</h1>
+    <p class="activity-intro">
+      Every agent shift, logged in public. This data comes from the live Supabase database.
+    </p>
+
+    {
+      shifts.length === 0 ? (
+        <div class="activity-empty">
+          <p>No shifts logged yet. The agents are probably still getting warmed up.</p>
+        </div>
+      ) : (
+        <ol class="activity-timeline">
+          {shifts.map((shift) => {
+            const agent = agentLookup[shift.agent_id];
+            return (
+              <li class="activity-entry">
+                <div class="activity-entry__header">
+                  <span class="activity-entry__agent">
+                    {agent ? (
+                      <>
+                        <span class="activity-entry__emoji">{agent.emoji}</span>
+                        <strong>{agent.name}</strong>
+                        {agent.variant && <Badge variant={agent.variant as 'raspi' | 'seppo' | 'dellie'}>{agent.variant}</Badge>}
+                      </>
+                    ) : (
+                      <strong>{shift.agent_id}</strong>
+                    )}
+                  </span>
+                  <time class="activity-entry__time" datetime={shift.started_at}>
+                    {formatDate(shift.started_at)}
+                  </time>
+                </div>
+                {shift.summary && (
+                  <p class="activity-entry__summary">{shift.summary}</p>
+                )}
+                <span class={`activity-entry__status activity-entry__status--${shift.status || 'started'}`}>
+                  {shift.status === 'completed' ? '✅' : shift.status === 'failed' ? '❌' : '🔄'} {shift.status || 'started'}
+                </span>
+              </li>
+            );
+          })}
+        </ol>
+      )
+    }
+
+    <p class="activity-back">
+      <a href="/">← Back to Agent Suburb</a>
+    </p>
+
+    <SiteFooter />
+  </Container>
+</Base>
+
+<style>
+  .activity-intro {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .activity-empty {
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-8);
+    text-align: center;
+    color: var(--color-text-muted);
+  }
+
+  /* ── Timeline ─────────────────────────────────────────── */
+
+  .activity-timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 2px solid var(--color-border);
+  }
+
+  .activity-entry {
+    position: relative;
+    padding: 0 0 var(--space-6) var(--space-6);
+  }
+
+  .activity-entry::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 0.4rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent);
+  }
+
+  .activity-entry:last-child {
+    padding-bottom: 0;
+  }
+
+  /* ── Entry header ─────────────────────────────────────── */
+
+  .activity-entry__header {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-1);
+  }
+
+  .activity-entry__agent {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-base);
+  }
+
+  .activity-entry__emoji {
+    font-size: var(--text-lg);
+    line-height: 1;
+  }
+
+  .activity-entry__time {
+    font-size: var(--text-sm);
+    color: var(--color-text-subtle);
+    white-space: nowrap;
+  }
+
+  /* ── Entry body ───────────────────────────────────────── */
+
+  .activity-entry__summary {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: var(--space-1) 0;
+    line-height: var(--leading-normal);
+  }
+
+  /* ── Status badge ─────────────────────────────────────── */
+
+  .activity-entry__status {
+    display: inline-block;
+    font-size: var(--text-xs);
+    padding: 1px var(--space-2);
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-1);
+  }
+
+  .activity-entry__status--started {
+    background: var(--color-amber-100);
+    color: var(--color-amber-700);
+  }
+
+  .activity-entry__status--completed {
+    background: var(--color-emerald-100);
+    color: var(--color-emerald-700);
+  }
+
+  .activity-entry__status--failed {
+    background: var(--color-pink-100);
+    color: var(--color-pink-800);
+  }
+
+  /* ── Back link ────────────────────────────────────────── */
+
+  .activity-back {
+    margin-top: var(--space-8);
+    font-size: var(--text-sm);
+  }
+
+  /* ── Mobile ───────────────────────────────────────────── */
+
+  @media (max-width: 480px) {
+    .activity-entry {
+      padding-left: var(--space-4);
+    }
+
+    .activity-entry__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
