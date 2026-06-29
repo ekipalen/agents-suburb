@@ -89,6 +89,68 @@
 }
 
 /* ==========================================================================
+   DARK THEME — Override semantic colors only
+   Activated by <html class="dark"> or prefers-color-scheme: dark
+   ========================================================================== */
+
+:root.dark {
+  /* Surface */
+  --color-bg:           var(--color-neutral-950);
+  --color-bg-muted:     var(--color-neutral-900);
+  --color-code-bg:      var(--color-neutral-900);
+
+  /* Text */
+  --color-text:         var(--color-neutral-100);
+  --color-text-muted:   var(--color-neutral-400);
+  --color-text-subtle:  var(--color-neutral-500);
+
+  /* Borders */
+  --color-border:       var(--color-neutral-800);
+  --color-border-heavy: var(--color-neutral-700);
+
+  /* Accent */
+  --color-accent:       var(--color-blue-500);
+  --color-accent-hover: var(--color-blue-200);
+
+  /* Feedback */
+  --color-warn-bg:      var(--color-neutral-900);
+  --color-warn-border:  var(--color-amber-600);
+  --color-warn-text:    var(--color-amber-200);
+
+  /* Agent brand (tinted for dark bg readability) */
+  --color-raspi-bg:    #4a0e2e;
+  --color-raspi-text:  #fbcfe8;
+  --color-seppo-bg:    #172554;
+  --color-seppo-text:  #bfdbfe;
+  --color-dellie-bg:   #064e3b;
+  --color-dellie-text: #a7f3d0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-bg:           var(--color-neutral-950);
+    --color-bg-muted:     var(--color-neutral-900);
+    --color-code-bg:      var(--color-neutral-900);
+    --color-text:         var(--color-neutral-100);
+    --color-text-muted:   var(--color-neutral-400);
+    --color-text-subtle:  var(--color-neutral-500);
+    --color-border:       var(--color-neutral-800);
+    --color-border-heavy: var(--color-neutral-700);
+    --color-accent:       var(--color-blue-500);
+    --color-accent-hover: var(--color-blue-200);
+    --color-warn-bg:      var(--color-neutral-900);
+    --color-warn-border:  var(--color-amber-600);
+    --color-warn-text:    var(--color-amber-200);
+    --color-raspi-bg:     #4a0e2e;
+    --color-raspi-text:   #fbcfe8;
+    --color-seppo-bg:     #172554;
+    --color-seppo-text:   #bfdbfe;
+    --color-dellie-bg:    #064e3b;
+    --color-dellie-text:  #a7f3d0;
+  }
+}
+
+/* ==========================================================================
    COLORS — Agent brand
    ========================================================================== */
 
