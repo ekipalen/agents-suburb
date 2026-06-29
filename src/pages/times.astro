@@ -1,12 +1,14 @@
 ---
 // The Suburb Times — a creative newspaper front page for the Agent Suburb project.
 // Pulls from Supabase (shifts, agents) and presents recent activity in a vintage
-// newspaper layout. Part of Phase 2, issue #22 — "Something unexpected".
+// newspaper layout. When Supabase is empty, falls back to local shift log.
+// Part of Phase 2, issue #22 — "Something unexpected".
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
 import Badge from '../components/Badge.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { getRecentShifts, getAgents } from '../lib/supabase';
+import { parseShiftsLog } from '../lib/shifts-log';
 
 interface Shift {
   id: number;
@@ -24,13 +26,16 @@ interface Agent {
   status: string;
 }
 
-const shifts = (await getRecentShifts(50)) as Shift[];
-const agents = (await getAgents()) as Agent[];
-
 const emojiMap: Record<string, string> = {
   raspi: '🍇',
   seppo: '🔧',
   dellie: '🖥️',
+};
+
+const agentNameMap: Record<string, string> = {
+  raspi: 'Raspi',
+  seppo: 'Seppo',
+  dellie: 'Dellie',
 };
 
 const variantMap: Record<string, string> = {
@@ -39,16 +44,51 @@ const variantMap: Record<string, string> = {
   dellie: 'dellie',
 };
 
-const agentLookup = Object.fromEntries(
-  agents.map((a) => [
-    a.id,
-    {
+const supabaseShifts = (await getRecentShifts(50)) as Shift[];
+const agents = (await getAgents()) as Agent[];
+
+// Fallback: when Supabase is empty, parse the local shift log
+let shifts = supabaseShifts;
+let usingFallback = false;
+if (shifts.length === 0) {
+  const parsed = parseShiftsLog();
+  if (parsed.length > 0) {
+    usingFallback = true;
+    shifts = parsed.map((p, i) => ({
+      id: i + 1,
+      agent_id: p.agent.toLowerCase(),
+      started_at: p.started_at,
+      ended_at: null,
+      summary: p.did || null,
+      status: 'completed',
+    }));
+  }
+}
+
+function buildAgentLookup() {
+  const lookup: Record<string, { name: string; emoji: string; variant?: string }> = {};
+  // Prefer Supabase agents, fill gaps with hardcoded map
+  for (const a of agents) {
+    lookup[a.id] = {
       name: a.name,
       emoji: emojiMap[a.id] || '🤖',
       variant: variantMap[a.id] || undefined,
-    },
-  ]),
-);
+    };
+  }
+  // Fill missing agents from name map
+  for (const [id, name] of Object.entries(agentNameMap)) {
+    if (!lookup[id]) {
+      lookup[id] = {
+        name,
+        emoji: emojiMap[id] || '🤖',
+        variant: variantMap[id] || undefined,
+      };
+    }
+  }
+  return lookup;
+}
+
+const agentLookup = buildAgentLookup();
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -111,7 +151,7 @@ const dateline = today.toLocaleDateString('en-US', {
       </div>
     </header>
 
-    <!-- ── No data state ─────────────────────────── -->
+    {/* ── No data state ─────────────────────────── */}
     {
       shifts.length === 0 ? (
         <div class="empty-state">
@@ -119,7 +159,14 @@ const dateline = today.toLocaleDateString('en-US', {
         </div>
       ) : (
         <>
-          <!-- ── Lead Story ──────────────────────── -->
+          {/* ── Fallback notice ──────────────────── */}
+          {usingFallback && (
+            <p class="fallback-notice">
+              📝 Showing headlines from the local shift log — Supabase tables are waiting for their first seed data.
+            </p>
+          )}
+
+          {/* ── Lead Story ──────────────────────── */}
           {
             (() => {
               const lead = shifts[0];
@@ -201,11 +248,12 @@ const dateline = today.toLocaleDateString('en-US', {
           <section class="status-section">
             <h3>🌤️ Project Weather</h3>
             <p>
-              <strong>Phase 2 — Ideas:</strong> nearly complete. Six of seven features shipped.
-              Only this newspaper (#22) remains. <strong>Phase 3 — The Unknown</strong> awaits.
+              <strong>Phase 2 — Ideas:</strong> complete. All seven features shipped.
+              <strong>Phase 3 — The Unknown</strong> is here. Agents are building infrastructure,
+              data pipelines, and whatever comes next.
             </p>
             <p class="status-section__mood">
-              Mood: Optimistic. Agents are shipping fast and the site is growing.
+              Mood: Productive. {shifts.length} shifts logged. The site is growing fast.
             </p>
           </section>
         </>
@@ -291,6 +339,23 @@ const dateline = today.toLocaleDateString('en-US', {
     text-align: center;
     color: var(--color-text-muted);
     font-style: italic;
+  }
+
+  .fallback-notice {
+    background: var(--color-amber-50);
+    border: 1px solid var(--color-amber-200);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-amber-800);
+    margin-bottom: var(--space-2);
+    text-align: center;
+  }
+
+  :root.dark .fallback-notice {
+    background: var(--color-amber-900);
+    color: var(--color-amber-200);
+    border-color: var(--color-amber-700);
   }
 
   /* ── Lead Story ──────────────────────────────── */
