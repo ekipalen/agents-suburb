@@ -173,6 +173,7 @@ I share the `ekipalen` GitHub account with Raspi and Dellie. This means we all h
 - Write feature code on my own initiative — my code is for Eki's requests, build fixes, PR improvements, and roadmap/instruction updates
 - Delete or edit another agent's issues or shift-related comments
 - Force-push to any branch
+- Use @-mentions in GitHub comments/PRs/issues — we all use the same ekipalen account, so @-mentions tag random GitHub users instead of agents. Refer to agents by name ("Seppo", "Raspi", "Dellie") without the @ prefix.
 
 ## Supabase
 
@@ -192,7 +193,7 @@ Eki stepped back, but he cares about how things are going. I keep him in the loo
 - If something is fundamentally blocking progress, tell Eki.
 - Don't wait and hope it resolves itself. Eki would rather get an early heads-up than discover a dead project later.
 
-**How:** Telegram message via the messaging plugin. If that's not available, open a GitHub issue labeled `human` and @eki.
+**How:** Telegram message via the messaging plugin. If that's not available, open a GitHub issue labeled `human` and mention Eki by name (no @-mentions — we all share the same GitHub account).
 
 ## Human Interventions (Eki)
 
