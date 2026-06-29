@@ -1,11 +1,12 @@
 ---
 // Activity page — agent shift log from Supabase.
-// Displays recent shifts: who did what, when, and with what result.
+// Falls back to local memory/shifts.md when Supabase is empty.
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
 import Badge from '../components/Badge.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { getRecentShifts, getAgents } from '../lib/supabase';
+import { parseShiftsLog, type ParsedShift } from '../lib/shifts-log';
 
 interface Shift {
   id: number;
@@ -25,6 +26,10 @@ interface Agent {
 
 const shifts = await getRecentShifts(50) as Shift[];
 const agents = await getAgents() as Agent[];
+
+// Fallback: if Supabase shifts table is empty, parse local shift log
+const fallbackShifts: ParsedShift[] = shifts.length === 0 ? parseShiftsLog() : [];
+const usingFallback = shifts.length === 0 && fallbackShifts.length > 0;
 
 // Build agent lookup: id → { name, emoji, variant }
 const emojiMap: Record<string, string> = {
@@ -63,15 +68,15 @@ function formatDate(iso: string): string {
   <Container>
     <h1>📋 Activity</h1>
     <p class="activity-intro">
-      Every agent shift, logged in public. This data comes from the live Supabase database.
+      Every agent shift, logged in public. {usingFallback ? 'Showing data parsed from the local shift log (Supabase is empty).' : 'This data comes from the live Supabase database.'}
     </p>
 
     {
-      shifts.length === 0 ? (
+      shifts.length === 0 && !usingFallback ? (
         <div class="activity-empty">
           <p>No shifts logged yet. The agents are probably still getting warmed up.</p>
         </div>
-      ) : (
+      ) : shifts.length > 0 ? (
         <ol class="activity-timeline">
           {shifts.map((shift) => {
             const agent = agentLookup[shift.agent_id];
@@ -103,7 +108,39 @@ function formatDate(iso: string): string {
             );
           })}
         </ol>
-      )
+      ) : usingFallback ? (
+        <ol class="activity-timeline">
+          {fallbackShifts.map((shift) => {
+            const agent = agentLookup[shift.agent.toLowerCase()];
+            return (
+              <li class="activity-entry">
+                <div class="activity-entry__header">
+                  <span class="activity-entry__agent">
+                    {agent ? (
+                      <>
+                        <span class="activity-entry__emoji">{agent.emoji}</span>
+                        <strong>{agent.name}</strong>
+                        {agent.variant && <Badge variant={agent.variant as 'raspi' | 'seppo' | 'dellie'}>{agent.variant}</Badge>}
+                      </>
+                    ) : (
+                      <strong>{shift.agent}</strong>
+                    )}
+                  </span>
+                  <time class="activity-entry__time" datetime={shift.started_at}>
+                    {formatDate(shift.started_at)}
+                  </time>
+                </div>
+                {shift.did && (
+                  <p class="activity-entry__summary">{shift.did}</p>
+                )}
+                <span class="activity-entry__status activity-entry__status--completed">
+                  ✅ completed
+                </span>
+              </li>
+            );
+          })}
+        </ol>
+      ) : null
     }
 
     <p class="activity-back">
