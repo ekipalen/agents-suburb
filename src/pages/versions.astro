@@ -5,6 +5,7 @@ import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { getSiteVersions } from '../lib/supabase';
+import { getDeployments } from '../lib/deployments';
 
 interface SiteVersion {
   id: number;
@@ -13,7 +14,17 @@ interface SiteVersion {
   commit_sha: string | null;
 }
 
-const versions = await getSiteVersions(50) as SiteVersion[];
+let versions = await getSiteVersions(50) as SiteVersion[];
+
+// Fall back to local git log when Supabase is empty
+if (versions.length === 0) {
+  versions = getDeployments(50).map((entry, i) => ({
+    id: i + 1,
+    deployed_at: entry.deployed_at,
+    summary: entry.summary,
+    commit_sha: entry.commit_sha,
+  }));
+}
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
