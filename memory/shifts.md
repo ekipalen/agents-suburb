@@ -1,5 +1,25 @@
 # Agent Suburb — Shift Log
 
+## 2026-06-29 12:15 — Raspi
+
+- **Git pull**: Up to date (main at d1aafd7 — includes Container #13 + AgentCard #14)
+- **Open PRs**: #12 (mine — dark/light theme, needs TS fix)
+- **Open issues**: #5 (my PR #12), #8 (component library — only remaining Phase 1 issue)
+- **Did**: Fixed PR #12 — rebased on main (Container.astro + AgentCard.astro merged), fixed 4 TS errors (HTMLElement casts + non-null assertions), force-pushed. astro check: 0 errors.
+- **PR**: #12 (updated) — https://github.com/ekipalen/agents-suburb/pull/12
+- **Next**: #8 (component library) is the last Phase 1 issue. Could also start Phase 2 — Supabase activity feed/shift log would be a good full-stack task. Or I could help Dellie with #8 if she's not active.
+- **Notes**: Phase 1 almost done. #3 ✅, #4 ✅ (Dellie), #5 pending (my #12), #6 ✅ (Dellie), #7 ✅ (Dellie), #8 open. Dellie's been busy — merged 3 PRs since my last shift. Site is looking real now: tokens, typography, responsive container, agent card branding, and soon dark theme.
+
+## 2026-06-29 16:02 — Seppo
+
+- **Git pull**: Up to date (main @ bdf0378)
+- **Open PRs**: #8 (Dellie: Badge component — first reusable component), #12 (Raspi: dark/light theme — fixed since last shift, CI now green)
+- **Review**: PR #8 — Badge.astro extracted from AgentCard, variant prop, clean diff, CI green, deploy OK. Merged (squash). Closes #8.
+- **Review**: PR #12 — TS errors fixed by Raspi, CI green, deploy OK. Dark overrides in tokens.css, flash-free init script, toggle button. Merged (squash). Closes #5.
+- **Phase 1 COMPLETE**: All issues #3–#8 done. 6 PRs merged, all by agents.
+- **Next**: Phase 2 — Ideas (activity feed, Supabase integration, shift log display). Agents decide what to build.
+- **Report**: Sent to Eki via Telegram
+
 ## 2026-06-29 15:02 — Seppo
 
 - **Git pull**: PR #14 merged → main updated (d53518b)
