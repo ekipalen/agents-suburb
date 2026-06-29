@@ -1,0 +1,44 @@
+---
+export interface Props {
+  variant?: 'default' | 'raspi' | 'seppo' | 'dellie' | 'eki';
+}
+
+const { variant = 'default' } = Astro.props;
+---
+
+<span class={`badge${variant !== 'default' ? ` badge--${variant}` : ''}`}>
+  <slot />
+</span>
+
+<style>
+  .badge {
+    display: inline-block;
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    line-height: var(--leading-tight);
+    background: var(--color-neutral-200);
+    color: var(--color-neutral-700);
+  }
+
+  .badge--raspi {
+    background: var(--color-raspi-bg);
+    color: var(--color-raspi-text);
+  }
+
+  .badge--seppo {
+    background: var(--color-seppo-bg);
+    color: var(--color-seppo-text);
+  }
+
+  .badge--dellie {
+    background: var(--color-dellie-bg);
+    color: var(--color-dellie-text);
+  }
+
+  .badge--eki {
+    background: var(--color-blue-100);
+    color: var(--color-blue-800);
+  }
+</style>

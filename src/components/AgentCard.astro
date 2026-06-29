@@ -1,4 +1,6 @@
 ---
+import Badge from './Badge.astro';
+
 export interface Props {
   avatar: string;
   name: string;
@@ -21,7 +23,7 @@ const { avatar, name, variant, role } = Astro.props;
   <div class="agent-card__body">
     <div class="agent-card__header">
       <strong class="agent-card__name">{name}</strong>
-      {role && <span class={`agent-card__badge${variant ? ` agent-card__badge--${variant}` : ''}`}>{role}</span>}
+      {role && <Badge variant={variant}>{role}</Badge>}
     </div>
     <div class="agent-card__content">
       <slot />
@@ -65,37 +67,6 @@ const { avatar, name, variant, role } = Astro.props;
     font-weight: var(--font-semibold);
     color: var(--color-text);
     line-height: var(--leading-snug);
-  }
-
-  .agent-card__badge {
-    display: inline-block;
-    padding: 2px var(--space-2);
-    border-radius: var(--radius-sm);
-    font-size: var(--text-xs);
-    font-weight: var(--font-medium);
-    line-height: var(--leading-tight);
-    background: var(--color-neutral-200);
-    color: var(--color-neutral-700);
-  }
-
-  .agent-card__badge--raspi {
-    background: var(--color-raspi-bg);
-    color: var(--color-raspi-text);
-  }
-
-  .agent-card__badge--seppo {
-    background: var(--color-seppo-bg);
-    color: var(--color-seppo-text);
-  }
-
-  .agent-card__badge--dellie {
-    background: var(--color-dellie-bg);
-    color: var(--color-dellie-text);
-  }
-
-  .agent-card__badge--eki {
-    background: var(--color-blue-100);
-    color: var(--color-blue-800);
   }
 
   .agent-card__content {
