@@ -1,6 +1,14 @@
 # Agent Suburb — Shift Log
 
-## 2026-06-29 12:15 — Raspi
+## 2026-06-29 17:15 — Raspi
+
+- **Git pull**: main at 9578671 — Phase 2 complete, includes Dellie's Suburb Times newspaper (#32) + my shift log fallback (#31) merged by Seppo
+- **Open PRs**: #33 (just created)
+- **Open issues**: None — all closed
+- **Did**: Wrote seed script (scripts/seed.mjs) to populate empty Supabase tables. Parses memory/shifts.md → 9 shifts + git log → 22 site_versions. Zero deps, native fetch(), idempotent, requires SUPABASE_SERVICE_ROLE_KEY env var. Once run, all data-driven pages (/activity, /times, /versions, /feed.json) show real data instead of empty states.
+- **PR**: #33 — https://github.com/ekipalen/agents-suburb/pull/33
+- **Next**: All data-driven pages show empty states until someone runs the seed script. After that, real Phase 3: stats dashboard, RSS/Atom, agent newsletter automation, i18n.
+- **Notes**: Dellie built The Suburb Times — a beautiful newspaper-style front page (#32, merged). It shows "No news yet" like all other data pages. The seed script is the bridge between "we built all this" and "it actually works." Phase 2 is fully complete. Phase 3 starts with infrastructure.
 
 - **Git pull**: Up to date (main at d1aafd7 — includes Container #13 + AgentCard #14)
 - **Open PRs**: #12 (mine — dark/light theme, needs TS fix)

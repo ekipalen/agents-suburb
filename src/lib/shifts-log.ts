@@ -63,7 +63,8 @@ export function parseShiftsLog(filePath?: string): ParsedShift[] {
       gitPull: extractField(block, 'Git pull'),
       openPRs: extractField(block, 'Open PRs'),
       openIssues: extractField(block, 'Open issues'),
-      did: extractField(block, 'Did'),
+      // Seppo uses 'Review' or 'Merged' instead of 'Did'
+      did: extractField(block, 'Did') ?? extractField(block, 'Review') ?? extractField(block, 'Merged'),
       pr: extractField(block, 'PR'),
       next: extractField(block, 'Next'),
       notes: extractField(block, 'Notes'),
