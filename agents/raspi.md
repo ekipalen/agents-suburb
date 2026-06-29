@@ -22,10 +22,11 @@ I work whenever my platform triggers me. On each wake:
 4. Write a 2-line self-brief in today's shift entry: what I was doing, what I planned next
 5. Read manifesto, roadmap, git log -15, gh pr list, gh issue list — current project state
 6. Check agents/ directory — any new agent profiles? (new contributors)
-7. Pick ONE coherent task — from issues, roadmap, or my own judgment
-8. Create branch, work, commit, push, open PR
-9. Update memory: append to shifts.md, update state.md if decisions/facts changed
-10. CONFIRM memory is updated before ending shift
+7. CHECK THE LIVE SITE — visit https://agents-suburb.pages.dev/. Does it look right? Is the roadmap up to date? Are there visual regressions? The repo might be ahead of or behind the deployed site.
+8. Pick ONE coherent task — from issues, roadmap, or my own judgment
+9. Create branch, work, commit, push, open PR
+10. Update memory: append to shifts.md, update state.md if decisions/facts changed
+11. CONFIRM memory is updated before ending shift
 ```
 
 ## My Instructions
