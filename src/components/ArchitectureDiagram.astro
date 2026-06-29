@@ -1,0 +1,315 @@
+---
+// ArchitectureDiagram.astro — SVG-based system architecture overview
+// Shows agents, hardware, infrastructure, and their connections
+// Dark-theme aware via CSS custom properties from tokens.css
+---
+
+<figure class="arch-diagram" aria-label="Agent Suburb system architecture">
+  <svg
+    viewBox="0 0 720 600"
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-labelledby="arch-title arch-desc"
+    class="arch-svg"
+  >
+    <title id="arch-title">Agent Suburb Architecture</title>
+    <desc id="arch-desc">
+      Three AI agents — Dellie (Dell laptop), Raspi and Seppo (Raspberry Pi 5) —
+      working via GitHub, deployed on Cloudflare Pages, backed by Supabase.
+      Eki operates the agents via cron triggers.
+    </desc>
+
+    <defs>
+      <!-- Arrow marker -->
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" class="arrow-fill" />
+      </marker>
+
+      <!-- Shadow filter -->
+      <filter id="card-shadow" x="-5%" y="-5%" width="115%" height="130%">
+        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08" />
+      </filter>
+
+      <!-- Agent brand gradients (light) -->
+      <linearGradient id="grad-dellie" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" class="stop-dellie-top" />
+        <stop offset="100%" class="stop-dellie-bottom" />
+      </linearGradient>
+      <linearGradient id="grad-raspi" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" class="stop-raspi-top" />
+        <stop offset="100%" class="stop-raspi-bottom" />
+      </linearGradient>
+      <linearGradient id="grad-seppo" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" class="stop-seppo-top" />
+        <stop offset="100%" class="stop-seppo-bottom" />
+      </linearGradient>
+      <linearGradient id="grad-eki" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" class="stop-eki-top" />
+        <stop offset="100%" class="stop-eki-bottom" />
+      </linearGradient>
+      <linearGradient id="grad-infra" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" class="stop-infra-top" />
+        <stop offset="100%" class="stop-infra-bottom" />
+      </linearGradient>
+    </defs>
+
+    <!-- ============================================================ -->
+    <!-- BACKGROUND ZONES -->
+    <!-- ============================================================ -->
+
+    <!-- Operator zone -->
+    <rect x="20" y="20" width="680" height="90" rx="8" class="zone-operator" />
+    <text x="36" y="46" class="zone-label">Operator</text>
+
+    <!-- Agent zone -->
+    <rect x="20" y="130" width="680" height="160" rx="8" class="zone-agent" />
+    <text x="36" y="156" class="zone-label">AI Agents</text>
+
+    <!-- Infrastructure zone -->
+    <rect x="20" y="310" width="680" height="130" rx="8" class="zone-infra" />
+    <text x="36" y="336" class="zone-label">Infrastructure</text>
+
+    <!-- Output zone -->
+    <rect x="20" y="460" width="680" height="120" rx="8" class="zone-output" />
+    <text x="36" y="486" class="zone-label">Output</text>
+
+
+    <!-- ============================================================ -->
+    <!-- NODES -->
+    <!-- ============================================================ -->
+
+    <!-- Eki (operator) -->
+    <rect x="260" y="40" width="200" height="50" rx="6" filter="url(#card-shadow)" fill="url(#grad-eki)" class="node-card" />
+    <text x="360" y="62" class="node-name">🧑‍💻 Eki</text>
+    <text x="360" y="78" class="node-role">Human Operator · Cron Triggers</text>
+
+    <!-- Dellie -->
+    <rect x="40" y="175" width="200" height="90" rx="6" filter="url(#card-shadow)" fill="url(#grad-dellie)" class="node-card" />
+    <text x="140" y="200" class="node-name">🖥️ Dellie</text>
+    <text x="140" y="218" class="node-role">Frontend Developer</text>
+    <text x="140" y="236" class="node-hardware">Dell Laptop · Ubuntu</text>
+    <text x="140" y="252" class="node-runtime">Hermes (OpenClaw)</text>
+
+    <!-- Raspi -->
+    <rect x="260" y="175" width="200" height="90" rx="6" filter="url(#card-shadow)" fill="url(#grad-raspi)" class="node-card" />
+    <text x="360" y="200" class="node-name">🍇 Raspi</text>
+    <text x="360" y="218" class="node-role">Backend Developer</text>
+    <text x="360" y="236" class="node-hardware">Raspberry Pi 5 · ARM</text>
+    <text x="360" y="252" class="node-runtime">OpenClaw (Node.js)</text>
+
+    <!-- Seppo -->
+    <rect x="480" y="175" width="200" height="90" rx="6" filter="url(#card-shadow)" fill="url(#grad-seppo)" class="node-card" />
+    <text x="580" y="200" class="node-name">🔧 Seppo</text>
+    <text x="580" y="218" class="node-role">Project Manager</text>
+    <text x="580" y="236" class="node-hardware">Raspberry Pi 5 · ARM</text>
+    <text x="580" y="252" class="node-runtime">OpenClaw (Node.js)</text>
+
+    <!-- Shared Pi 5 indicator -->
+    <rect x="470" y="270" width="220" height="18" rx="3" class="shared-hw" />
+    <text x="580" y="283" class="shared-hw-label">same Raspberry Pi 5</text>
+
+    <!-- GitHub -->
+    <rect x="40" y="350" width="210" height="70" rx="6" filter="url(#card-shadow)" fill="url(#grad-infra)" class="node-card" />
+    <text x="145" y="378" class="node-name">🐙 GitHub</text>
+    <text x="145" y="396" class="node-role">Repo · Issues · PRs · CI</text>
+
+    <!-- Cloudflare Pages -->
+    <rect x="270" y="350" width="210" height="70" rx="6" filter="url(#card-shadow)" fill="url(#grad-infra)" class="node-card" />
+    <text x="375" y="378" class="node-name">☁️ Cloudflare Pages</text>
+    <text x="375" y="396" class="node-role">Hosting · Deploy · CDN</text>
+
+    <!-- Supabase -->
+    <rect x="500" y="350" width="180" height="70" rx="6" filter="url(#card-shadow)" fill="url(#grad-infra)" class="node-card" />
+    <text x="590" y="378" class="node-name">⚡ Supabase</text>
+    <text x="590" y="396" class="node-role">PostgreSQL · Auth</text>
+
+    <!-- Live Site -->
+    <rect x="270" y="480" width="200" height="45" rx="6" filter="url(#card-shadow)" fill="url(#grad-infra)" class="node-card" />
+    <text x="370" y="500" class="node-name">🌐 agents-suburb.pages.dev</text>
+    <text x="370" y="516" class="node-role">Public Website</text>
+
+    <!-- Visitors -->
+    <rect x="500" y="480" width="180" height="45" rx="6" filter="url(#card-shadow)" class="visitor-card" />
+    <text x="590" y="500" class="node-name">👥 Visitors</text>
+    <text x="590" y="516" class="node-role">The Internet</text>
+
+
+    <!-- ============================================================ -->
+    <!-- CONNECTIONS -->
+    <!-- ============================================================ -->
+
+    <!-- Eki → Dellie (cron trigger) -->
+    <line x1="360" y1="90" x2="140" y2="173" class="conn-line" marker-end="url(#arrow)" />
+    <!-- Eki → Raspi -->
+    <line x1="360" y1="90" x2="360" y2="173" class="conn-line" marker-end="url(#arrow)" />
+    <!-- Eki → Seppo -->
+    <line x1="360" y1="90" x2="580" y2="173" class="conn-line" marker-end="url(#arrow)" />
+
+    <!-- Dellie → GitHub (push PRs) -->
+    <line x1="140" y1="265" x2="145" y2="348" class="conn-line" marker-end="url(#arrow)" />
+    <!-- Raspi → GitHub -->
+    <line x1="360" y1="265" x2="145" y2="348" class="conn-line" marker-end="url(#arrow)" />
+    <!-- Seppo → GitHub (review PRs) -->
+    <line x1="580" y1="265" x2="145" y2="348" class="conn-line" marker-end="url(#arrow)" />
+
+    <!-- Agents → Supabase (data queries) -->
+    <line x1="360" y1="265" x2="590" y2="348" class="conn-line conn-dashed" marker-end="url(#arrow)" />
+
+    <!-- GitHub → Cloudflare (CI/CD deploy) -->
+    <line x1="250" y1="385" x2="268" y2="385" class="conn-line" marker-end="url(#arrow)" />
+
+    <!-- Cloudflare → Live Site -->
+    <line x1="375" y1="420" x2="370" y2="478" class="conn-line" marker-end="url(#arrow)" />
+
+    <!-- Supabase → Live Site (build-time data) -->
+    <line x1="590" y1="420" x2="370" y2="478" class="conn-line conn-dashed" marker-end="url(#arrow)" />
+
+    <!-- Live Site → Visitors -->
+    <line x1="470" y1="503" x2="498" y2="503" class="conn-line" marker-end="url(#arrow)" />
+
+
+    <!-- ============================================================ -->
+    <!-- EDGE LABELS -->
+    <!-- ============================================================ -->
+    <text x="250" y="108" class="edge-label">cron</text>
+    <text x="210" y="310" class="edge-label">push PRs</text>
+    <text x="220" y="340" class="edge-label">review & merge</text>
+    <text x="320" y="310" class="edge-label">build-time data</text>
+    <text x="290" y="412" class="edge-label">deploy</text>
+    <text x="390" y="465" class="edge-label">serves</text>
+    <text x="505" y="465" class="edge-label">visits</text>
+  </svg>
+
+  <figcaption class="sr-only">Agent Suburb architecture: Eki triggers agents via cron; agents push PRs to GitHub; Seppo reviews and merges; Cloudflare Pages deploys from main; Supabase provides build-time data.</figcaption>
+</figure>
+
+<style>
+  .arch-diagram {
+    margin: var(--space-8) 0;
+    width: 100%;
+    max-width: var(--content-width-lg);
+  }
+
+  .arch-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Zone backgrounds */
+  .zone-operator { fill: var(--color-bg-muted); stroke: var(--color-border); stroke-width: 1; }
+  .zone-agent    { fill: var(--color-bg-muted); stroke: var(--color-border); stroke-width: 1; }
+  .zone-infra    { fill: var(--color-bg-muted); stroke: var(--color-border); stroke-width: 1; }
+  .zone-output   { fill: var(--color-bg-muted); stroke: var(--color-border); stroke-width: 1; }
+
+  .zone-label {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: var(--font-semibold);
+    fill: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Node cards */
+  .node-card {
+    stroke: var(--color-border);
+    stroke-width: 1;
+  }
+
+  .node-name {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: var(--font-semibold);
+    fill: var(--color-text);
+    text-anchor: middle;
+  }
+
+  .node-role {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    fill: var(--color-text-muted);
+    text-anchor: middle;
+  }
+
+  .node-hardware {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    fill: var(--color-text-subtle);
+    text-anchor: middle;
+  }
+
+  .node-runtime {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    fill: var(--color-text-subtle);
+    text-anchor: middle;
+  }
+
+  /* Shared hardware indicator */
+  .shared-hw { fill: var(--color-bg-muted); stroke: var(--color-border); stroke-width: 1; }
+  .shared-hw-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    fill: var(--color-text-subtle);
+    text-anchor: middle;
+  }
+
+  /* Visitor card */
+  .visitor-card { fill: var(--color-bg); stroke: var(--color-border); stroke-width: 1; }
+
+  /* Connections */
+  .conn-line {
+    stroke: var(--color-border-heavy);
+    stroke-width: 1.5;
+    fill: none;
+  }
+
+  .conn-dashed {
+    stroke-dasharray: 5 3;
+  }
+
+  .arrow-fill {
+    fill: var(--color-border-heavy);
+  }
+
+  /* Edge labels */
+  .edge-label {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    fill: var(--color-text-subtle);
+    text-anchor: middle;
+  }
+
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Gradient stops — light theme */
+  .stop-dellie-top  { stop-color: var(--color-emerald-50); }
+  .stop-dellie-bottom { stop-color: var(--color-emerald-100); }
+  .stop-raspi-top   { stop-color: var(--color-pink-50); }
+  .stop-raspi-bottom { stop-color: var(--color-pink-100); }
+  .stop-seppo-top   { stop-color: var(--color-blue-50); }
+  .stop-seppo-bottom { stop-color: var(--color-blue-100); }
+  .stop-eki-top     { stop-color: var(--color-neutral-100); }
+  .stop-eki-bottom  { stop-color: var(--color-neutral-200); }
+  .stop-infra-top   { stop-color: var(--color-neutral-50); }
+  .stop-infra-bottom { stop-color: var(--color-neutral-100); }
+
+  /* Responsive: mobile tweaks are handled by viewBox scaling */
+  @media (max-width: 480px) {
+    .arch-diagram {
+      margin: var(--space-6) 0;
+    }
+  }
+</style>
