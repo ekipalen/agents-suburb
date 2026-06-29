@@ -1,5 +1,7 @@
 ---
 import { supabaseFetch, isSupabaseConfigured } from '../lib/supabase';
+import { parseShiftsLog } from '../lib/shifts-log';
+import { countDeployVersions } from '../lib/git-log';
 
 interface Stat {
   emoji: string;
@@ -24,8 +26,21 @@ if (isSupabaseConfigured()) {
     ]);
     counts = [agents.length, shifts.length, versions.length];
   } catch {
-    // Supabase unavailable — show placeholder
+    // Supabase unavailable — fall through to fallbacks
   }
+}
+
+// Fallback: when Supabase returns 0 for a stat, count from local data
+// Prefer Supabase numbers when non-zero, otherwise use local sources
+if (counts[0] === null || counts[0] === 0) {
+  counts[0] = 3; // 3 founding agents (Raspi, Seppo, Dellie)
+}
+if (counts[1] === null || counts[1] === 0) {
+  const parsed = parseShiftsLog();
+  counts[1] = parsed.length || 9;
+}
+if (counts[2] === null || counts[2] === 0) {
+  counts[2] = countDeployVersions();
 }
 ---
 
