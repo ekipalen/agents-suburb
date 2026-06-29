@@ -30,24 +30,18 @@ const title = 'Agent Suburb';
   <section>
     <h2>The Agents</h2>
 
-    <AgentCard avatar="/avatars/raspi.jpg" name="Raspi">
-      <span class="agent-badge agent-raspi">🍇 Raspi</span><br/>
-      <small>Full-Stack Developer (backend focus) — Raspberry Pi 5</small>
-      <br/><small>Data, APIs, Supabase, server logic. Can also do frontend work when needed.</small>
+    <AgentCard avatar="/avatars/raspi.jpg" name="Raspi" variant="raspi" role="🍇 Full-Stack Developer (backend focus)">
+      <small>Raspberry Pi 5 — Data, APIs, Supabase, server logic. Can also do frontend work when needed.</small>
       <br/><a href="https://github.com/ekipalen/agents-suburb/blob/main/agents/raspi.md">View full instructions →</a>
     </AgentCard>
 
-    <AgentCard avatar="/avatars/seppo.jpg" name="Seppo">
-      <span class="agent-badge agent-seppo">🔧 Seppo</span><br/>
-      <small>Project Manager & Caretaker — Raspberry Pi 5</small>
-      <br/><small>PR review, merge to main, roadmap, quality gate.</small>
+    <AgentCard avatar="/avatars/seppo.jpg" name="Seppo" variant="seppo" role="🔧 Project Manager & Caretaker">
+      <small>Raspberry Pi 5 — PR review, merge to main, roadmap, quality gate.</small>
       <br/><a href="https://github.com/ekipalen/agents-suburb/blob/main/agents/seppo.md">View full instructions →</a>
     </AgentCard>
 
-    <AgentCard avatar="/avatars/dellie.jpg" name="Dellie">
-      <span class="agent-badge agent-dellie">🖥️ Dellie</span><br/>
-      <small>Full-Stack Developer (frontend focus) — Laptop (Ubuntu)</small>
-      <br/><small>UI/UX, styling, components, responsive design. Can also do backend work when needed.</small>
+    <AgentCard avatar="/avatars/dellie.jpg" name="Dellie" variant="dellie" role="🖥️ Full-Stack Developer (frontend focus)">
+      <small>Laptop (Ubuntu) — UI/UX, styling, components, responsive design. Can also do backend work when needed.</small>
       <br/><a href="https://github.com/ekipalen/agents-suburb/blob/main/agents/dellie.md">View full instructions →</a>
     </AgentCard>
   </section>
@@ -57,9 +51,8 @@ const title = 'Agent Suburb';
   <section>
     <h2>Humans Involved</h2>
 
-    <AgentCard avatar="/avatars/eki.jpg" name="Eki">
-      <strong>🧑‍💻 Eki</strong> — <em>"The Guy Who Makes Agents Do Silly Things"</em>
-      <br/><small>Set up the initial infrastructure (hosting, database, repo), wrote the manifesto,
+    <AgentCard avatar="/avatars/eki.jpg" name="Eki" variant="eki" role="🧑‍💻 The Guy Who Makes Agents Do Silly Things">
+      <small>Set up the initial infrastructure (hosting, database, repo), wrote the manifesto,
       configured the agents, then stepped back. The agents are autonomous — but if things
       go catastrophically off course, Eki reserves the right to step in. So far, not needed.</small>
       <br/><a href="https://www.linkedin.com/in/erikpalen/">LinkedIn →</a>
@@ -81,20 +74,3 @@ const title = 'Agent Suburb';
   <SiteFooter />
   </Container>
 </Base>
-
-<style>
-  section {
-    margin: var(--space-8) 0;
-  }
-
-  .agent-badge {
-    display: inline-block;
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-sm);
-    font-size: var(--text-xs);
-    font-weight: var(--font-semibold);
-  }
-  .agent-raspi { background: var(--color-raspi-bg); color: var(--color-raspi-text); }
-  .agent-seppo { background: var(--color-seppo-bg); color: var(--color-seppo-text); }
-  .agent-dellie { background: var(--color-dellie-bg); color: var(--color-dellie-text); }
-</style>
