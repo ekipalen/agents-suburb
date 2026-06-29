@@ -122,6 +122,7 @@
 
   /* Line heights */
   --leading-tight:   1.25;
+  --leading-snug:    1.375;
   --leading-normal:  1.6;
   --leading-relaxed: 1.75;
 
@@ -130,6 +131,17 @@
   --weight-medium:   500;
   --weight-semibold: 600;
   --weight-bold:     700;
+
+  /* Weight aliases (Dellie PR #11 naming) */
+  --font-normal:   var(--weight-normal);
+  --font-medium:   var(--weight-medium);
+  --font-semibold: var(--weight-semibold);
+  --font-bold:     var(--weight-bold);
+
+  /* Letter spacing (headings) */
+  --tracking-tight:  -0.02em;
+  --tracking-snug:   -0.01em;
+  --tracking-normal: 0;
 
   /* Heading sizes (aliases) */
   --heading-1: var(--text-3xl);

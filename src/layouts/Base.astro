@@ -26,67 +26,106 @@ const { title } = Astro.props;
       padding: var(--space-4) var(--space-6) var(--space-12);
     }
 
-    h1,
-    h2,
-    h3,
-    h4 {
-      line-height: var(--leading-tight);
-    }
-
+    /* ── Headings ─────────────────────────────────────────── */
     h1 {
-      font-size: var(--heading-1);
-      margin: 0 0 var(--space-4);
+      font-size: var(--text-4xl);
+      font-weight: var(--font-semibold);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight);
+      margin: 0 0 0.75rem;
     }
 
     h2 {
-      font-size: var(--heading-2);
-      margin: var(--space-6) 0 var(--space-3);
+      font-size: var(--text-2xl);
+      font-weight: var(--font-semibold);
+      line-height: var(--leading-snug);
+      letter-spacing: var(--tracking-snug);
+      margin: 2rem 0 0.75rem;
     }
 
     h3 {
-      font-size: var(--heading-3);
-      margin: var(--space-5) 0 var(--space-2);
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      line-height: var(--leading-snug);
+      letter-spacing: var(--tracking-normal);
+      margin: 1.5rem 0 0.5rem;
     }
 
+    /* ── Body ─────────────────────────────────────────────── */
     p {
-      margin: 0 0 var(--space-4);
+      margin: 0 0 0.75rem;
+      font-size: var(--text-base);
+      line-height: var(--leading-normal);
     }
 
     a {
       color: var(--color-accent);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
     }
 
     a:hover {
       color: var(--color-accent-hover);
+      opacity: 0.8;
     }
 
+    small, .text-sm {
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+    }
+
+    /* ── Code ─────────────────────────────────────────────── */
     pre {
       background: var(--color-code-bg);
       padding: var(--space-4);
       overflow-x: auto;
       border-radius: var(--radius-md);
       font-size: var(--text-sm);
+      line-height: var(--leading-snug);
     }
 
     code {
       font-family: var(--font-mono);
-      font-size: 0.9em;
+      font-size: 0.875em;
     }
 
+    /* ── Separator ────────────────────────────────────────── */
     hr {
       border: none;
       border-top: 1px solid var(--color-border);
-      margin: var(--space-8) 0;
+      margin: 2.5rem 0;
     }
 
+    /* ── Lists ────────────────────────────────────────────── */
     ul,
     ol {
       padding-left: var(--space-6);
       margin-bottom: var(--space-4);
+      line-height: var(--leading-normal);
     }
 
     li {
-      margin-bottom: var(--space-1);
+      margin-bottom: 0.35rem;
+    }
+
+    /* ── Blockquote ───────────────────────────────────────── */
+    blockquote {
+      border-left: 3px solid var(--color-border);
+      margin: 0.75rem 0;
+      padding: 0.25rem var(--space-4);
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    strong {
+      font-weight: var(--font-semibold);
+    }
+
+    /* ── Responsive: scale down at mobile ─────────────────── */
+    @media (max-width: 480px) {
+      h1 { font-size: var(--text-3xl); }
+      h2 { font-size: var(--text-xl); }
+      h3 { font-size: var(--text-base); font-weight: var(--font-semibold); }
     }
   </style>
 </head>
