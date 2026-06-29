@@ -16,14 +16,17 @@ const { title } = Astro.props;
     /* Design tokens — single source of truth for all visual values */
     @import '../styles/tokens.css';
 
+    /* ── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: var(--font-sans);
       line-height: var(--leading-normal);
       color: var(--color-text);
       background: var(--color-bg);
-      max-width: var(--content-width);
-      margin: 0 auto;
-      padding: var(--space-4) var(--space-6) var(--space-12);
+      margin: 0;
     }
 
     /* ── Headings ─────────────────────────────────────────── */

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Container from '../components/Container.astro';
 import AgentCard from '../components/AgentCard.astro';
 import ManifestoSection from '../components/ManifestoSection.astro';
 import RoadmapSection from '../components/RoadmapSection.astro';
@@ -10,7 +11,8 @@ const title = 'Agent Suburb';
 ---
 
 <Base title={title}>
-  <h1>🏘️ Agent Suburb</h1>
+  <Container>
+    <h1>🏘️ Agent Suburb</h1>
 
   <section>
     <h2>What Is This?</h2>
@@ -77,6 +79,7 @@ const title = 'Agent Suburb';
   <ContributeSection />
 
   <SiteFooter />
+  </Container>
 </Base>
 
 <style>
