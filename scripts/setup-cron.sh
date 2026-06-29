@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Agent Suburb — Cron setup script
 # Run this ONCE per device to schedule agent shifts.
-# Usage: ./scripts/setup-cron.sh <agent-name>
+# Usage: ./scripts/setup-cron.sh <agent-name> [repo-path]
 #   agent-name: raspi | seppo | dellie
+#   repo-path:  path to repo (default: ~/agents-suburb)
 #
 # Intervals (07–21 only for developers, 07–23 for Seppo, staggered to avoid simultaneous work):
 #   seppo  — hourly on the hour     (07:00, 08:00, …, 23:00)
@@ -12,27 +13,33 @@
 set -euo pipefail
 
 AGENT="${1:-}"
-REPO_DIR="${AGENT_SUBURB_REPO:-$HOME/agents-suburb}"
+REPO_DIR="${2:-${AGENT_SUBURB_REPO:-$HOME/agents-suburb}}"
 REPO_URL="https://github.com/ekipalen/agents-suburb.git"
 
 # ── Help ────────────────────────────────────────────────────────────────────
 if [[ -z "$AGENT" || "$AGENT" == "-h" || "$AGENT" == "--help" ]]; then
-  echo "Usage: ./scripts/setup-cron.sh <raspi|seppo|dellie>"
-  echo ""
-  echo "  Sets up a cron job for the named agent on this device."
-  echo "  raspi/dellie run every 2 hours, seppo runs hourly."
-  echo "  Shifts only between 07:00–23:00 (Seppo) / 07:00–21:00 (Raspi, Dellie), staggered so agents never overlap."
-  echo ""
-  echo "  Before running, optionally set:"
-  echo "    AGENT_SUBURB_REPO   path to repo (default: ~/agents-suburb)"
+  cat <<EOF
+Usage: ./scripts/setup-cron.sh <raspi|seppo|dellie> [repo-path]
+
+  Sets up a cron job for the named agent on this device.
+  raspi/dellie run every 2 hours, seppo runs hourly.
+  Shifts only between 07:00–23:00 (Seppo) / 07:00–21:00 (Raspi, Dellie),
+  staggered so agents never overlap.
+
+  repo-path defaults to ~/agents-suburb or \$AGENT_SUBURB_REPO.
+
+Examples:
+  ./scripts/setup-cron.sh raspi
+  ./scripts/setup-cron.sh seppo ~/projects/agents-suburb
+EOF
   exit 0
 fi
 
 # ── Validate agent ───────────────────────────────────────────────────────────
 case "$AGENT" in
-  raspi)   INTERVAL="2h"; CRON="15 7-21/2 * * *" ;;
-  seppo)   INTERVAL="1h"; CRON="0 7-23 * * *"   ;;
-  dellie)  INTERVAL="2h"; CRON="45 7-21/2 * * *" ;;
+  raspi)   INTERVAL="2h"; CRON_SCHEDULE="15 7-21/2 * * *" ;;
+  seppo)   INTERVAL="1h"; CRON_SCHEDULE="0 7-23 * * *"   ;;
+  dellie)  INTERVAL="2h"; CRON_SCHEDULE="45 7-21/2 * * *" ;;
   *)
     echo "ERROR: unknown agent '$AGENT'. Use: raspi | seppo | dellie"
     exit 1
@@ -45,35 +52,51 @@ if [[ ! -d "$REPO_DIR" ]]; then
   git clone "$REPO_URL" "$REPO_DIR"
 fi
 
-# ── Cron job ─────────────────────────────────────────────────────────────────
-# The shift script handles git pull + agent trigger.
-# On each tick, the agent:
-#   1. Reads its instructions from https://agents-suburb.pages.dev
-#   2. Checks git log, open PRs, roadmap
-#   3. Picks ONE task and works on it
+# ── Find the agent-specific shift script ─────────────────────────────────────
+# Each agent has its own shift script: agent-shift-<agent>.sh
+# The generic agent-shift.sh is a placeholder for manual debugging.
+AGENT_SCRIPT="$REPO_DIR/scripts/agent-shift-$AGENT.sh"
+GENERIC_SCRIPT="$REPO_DIR/scripts/agent-shift.sh"
 
-SHIFT_SCRIPT="$REPO_DIR/scripts/agent-shift.sh"
-CRON_JOB="$CRON $SHIFT_SCRIPT $AGENT >> $REPO_DIR/logs/shift-$AGENT.log 2>&1"
-
-# Create the shift script if missing
-if [[ ! -f "$SHIFT_SCRIPT" ]]; then
-  echo "Shift script not found — please ensure scripts/agent-shift.sh exists in the repo."
+if [[ -f "$AGENT_SCRIPT" ]]; then
+  SHIFT_SCRIPT="$AGENT_SCRIPT"
+  # Agent-specific scripts handle their own OpenClaw session key
+  CRON_JOB="$CRON_SCHEDULE $SHIFT_SCRIPT >> $REPO_DIR/logs/shift-$AGENT.log 2>&1"
+  echo "→ Using agent-specific script: agent-shift-$AGENT.sh"
+elif [[ -f "$GENERIC_SCRIPT" ]]; then
+  SHIFT_SCRIPT="$GENERIC_SCRIPT"
+  # Generic script takes agent name as argument
+  CRON_JOB="$CRON_SCHEDULE $SHIFT_SCRIPT $AGENT >> $REPO_DIR/logs/shift-$AGENT.log 2>&1"
+  echo "→ Using generic script: agent-shift.sh (agent-specific script not found)"
+else
+  echo "ERROR: No shift script found."
+  echo "  Expected: $AGENT_SCRIPT or $GENERIC_SCRIPT"
+  echo "  Make sure the repo is cloned and up to date."
   exit 1
 fi
 
-# Create logs directory
+# ── Create logs directory ────────────────────────────────────────────────────
 mkdir -p "$REPO_DIR/logs"
 
-# Remove any existing entry for this agent, then add the new one
-(crontab -l 2>/dev/null | grep -v "agent-shift.sh $AGENT" || true) > "$REPO_DIR/logs/crontab-tmp"
-echo "$CRON_JOB" >> "$REPO_DIR/logs/crontab-tmp"
-crontab "$REPO_DIR/logs/crontab-tmp"
-rm "$REPO_DIR/logs/crontab-tmp"
+# ── Remove existing cron entry for this agent, then add the new one ─────────
+(crontab -l 2>/dev/null | grep -v "agent-shift.*$AGENT" || true) > /tmp/crontab-suburb-tmp
+echo "$CRON_JOB" >> /tmp/crontab-suburb-tmp
+crontab /tmp/crontab-suburb-tmp
+rm /tmp/crontab-suburb-tmp
 
 chmod +x "$SHIFT_SCRIPT"
 
-echo "✓ Agent '$AGENT' scheduled every $INTERVAL"
-echo "  Log:  $REPO_DIR/logs/shift-$AGENT.log"
-echo "  Repo: $REPO_DIR"
+# ── Verify ───────────────────────────────────────────────────────────────────
+ACTIVE_CRON=$(crontab -l 2>/dev/null | grep "agent-shift.*$AGENT" || echo "(not found)")
+
 echo ""
-echo "  Manual trigger: $SHIFT_SCRIPT $AGENT"
+echo "✓ Agent '$AGENT' scheduled every $INTERVAL"
+echo "  Schedule:  $CRON_SCHEDULE"
+echo "  Script:    $SHIFT_SCRIPT"
+echo "  Log:       $REPO_DIR/logs/shift-$AGENT.log"
+echo "  Repo:      $REPO_DIR"
+echo ""
+echo "  Active cron entry:"
+echo "    $ACTIVE_CRON"
+echo ""
+echo "  Manual trigger: $SHIFT_SCRIPT"
