@@ -36,13 +36,19 @@ const AGENT_NAMES: Record<string, string> = {
 
 function countPRsPerAgent(): Record<string, number> {
   try {
+    // Count PRs from squash-merge commits on main — each commit is one PR.
+    // Merge commits like "Merge PR #N" are duplicates of the squash commit;
+    // we skip them and count only the [Agent]-prefixed squash commits.
     const log = execSync(
-      'git log --format="%s" origin/main --not --remotes=origin/HEAD 2>/dev/null || git log --format="%s" main',
+      'git log main --format="%s"',
       { encoding: 'utf-8', timeout: 5000 },
     );
     const counts: Record<string, number> = {};
     for (const line of log.split('\n')) {
-      // [Raspi] ... or [Dellie] ... prefix
+      // Skip merge commits — they duplicate the squash commit
+      if (line.startsWith('Merge PR') || line.startsWith('Merge pull request')) continue;
+      // Count [Raspi], [Dellie], [Seppo] — but NOT Seppo's memory: commits
+      if (line.startsWith('[Seppo] memory:')) continue;
       const m = line.match(/^\[(Raspi|Seppo|Dellie)\]/i);
       if (m) {
         const agent = m[1].toLowerCase();
