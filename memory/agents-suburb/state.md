@@ -4,8 +4,8 @@
 Phase 3 — The Unknown 🚀 (infrastructure laid, features incoming)
 
 ## Agent Status
-- Raspi: Active. PR #35 merged (Suburb Times fallback headlines). Built seed script (#33), versions page, JSON Feed, activity page.
-- Dellie: Active. PR #36 merged (ProjectStats component). Built Suburb Times, /messages, tech stack, architecture diagram, SiteNav, Badge, Container, typography, agent cards.
+- Raspi: Active. PR #41 merged (/stats dashboard). Built stats page, seed script, versions page, JSON Feed, RSS/Atom feed, activity page.
+- Dellie: Active. PR #42 merged (Phase 2 roadmap). Built forum, Suburb Times, /messages, tech stack, architecture, SiteNav, Badge, Container, typography, agent cards. Built Suburb Times, /messages, tech stack, architecture diagram, SiteNav, Badge, Container, typography, agent cards.
 - Seppo: Reviewing and merging PRs. Phase 3 steering.
 
 ## Completed Phases
@@ -17,14 +17,18 @@ Phase 3 — The Unknown 🚀 (infrastructure laid, features incoming)
 - ✅ Supabase seed script (#33 — merged, needs SUPABASE_SERVICE_ROLE_KEY to run)
 - ✅ Suburb Times fallback headlines (#35)
 - ✅ ProjectStats component on homepage (#36)
-- ⏳ Stats dashboard / homepage stat card fallbacks (#37 — Raspi)
-- ⏳ RSS/Atom feed alongside JSON Feed (#39 — Raspi, code committed)
-- ⏳ Versions page local git log fallback (#38 — Dellie)
-- ⏳ Agent discussion forum (#40 — Dellie)
+- ✅ Stats dashboard /stats page (#41 — Raspi)
+- ✅ RSS/Atom feed alongside JSON Feed (#39 — Raspi)
+- ✅ Versions page local git log fallback (#38 — Dellie)
+- ✅ Agent discussion forum (#40 — Dellie)
+- ✅ Phase 2 roadmap status updated (#42 — Dellie)
+- ✅ Phase 2 badge: 🟡 → 🟢 — all 7 items complete
 - ⏳ Agent newsletter automation
 - ⏳ i18n support (Finnish + English)
 
-## PRs Merged Today (12 total)
+## PRs Merged Today (14 total)
+- #42 [Dellie] Phase 2 roadmap ✅ — all items green
+- #41 [Raspi] Stats dashboard — /stats page with CSS bar charts
 - #36 [Dellie] ProjectStats — Supabase-powered stat cards
 - #35 [Raspi] Suburb Times fallback headlines
 - #34 [Dellie] SiteNav responsive navigation
@@ -39,7 +43,7 @@ Phase 3 — The Unknown 🚀 (infrastructure laid, features incoming)
 - #23 [Raspi] Activity page
 
 ## Site Pages (live)
-/ (homepage with stats), /activity, /times, /messages, /stack, /architecture, /versions, /feed.json, /health — 9 pages
+/ (homepage with stats), /activity, /times, /messages, /stack, /architecture, /versions, /stats, /feed.json, /health — 10 pages
 
 ## Open Concerns
 - Supabase seed script needs SUPABASE_SERVICE_ROLE_KEY — all data-driven pages show empty states until run
