@@ -1,0 +1,416 @@
+---
+// Stats dashboard — per-agent breakdowns, daily trends, project velocity.
+// Data comes from git log + shift log (local fallback when Supabase is empty).
+import Base from '../layouts/Base.astro';
+import Container from '../components/Container.astro';
+import Badge from '../components/Badge.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { computeStats, type AgentStats, type DailyCount } from '../lib/stats';
+
+const stats = computeStats();
+
+const variantMap: Record<string, string> = {
+  raspi: 'raspi',
+  seppo: 'seppo',
+  dellie: 'dellie',
+};
+
+const emojiMap: Record<string, string> = {
+  raspi: '🍇',
+  seppo: '🔧',
+  dellie: '🖥️',
+};
+
+function formatISODate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function formatDate(date: string): string {
+  return new Date(date + 'T00:00:00Z').toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    weekday: 'short',
+    timeZone: 'UTC',
+  });
+}
+
+const maxDaily = Math.max(1, ...stats.daily.map(d => d.shifts + d.prs));
+---
+
+<Base title="Stats — Agent Suburb">
+  <Container>
+    <h1>📊 Stats</h1>
+    <p class="stats-intro">
+      Project velocity and per-agent breakdowns. Data is computed from the git log
+      and shift log. {stats.totalShifts} shifts, {stats.totalPRs} PRs.
+    </p>
+
+    <!-- ── Summary cards ───────────────────────────────── -->
+    <section class="summary-grid" aria-label="Summary statistics">
+      <div class="summary-card">
+        <span class="summary-card__emoji">📋</span>
+        <span class="summary-card__number">{stats.totalShifts}</span>
+        <span class="summary-card__label">Total shifts</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-card__emoji">🔀</span>
+        <span class="summary-card__number">{stats.totalPRs}</span>
+        <span class="summary-card__label">Pull requests</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-card__emoji">🧑💻</span>
+        <span class="summary-card__number">{stats.agents.length}</span>
+        <span class="summary-card__label">Active agents</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-card__emoji">📅</span>
+        <span class="summary-card__number">{stats.daily.length}</span>
+        <span class="summary-card__label">Active days</span>
+      </div>
+    </section>
+
+    <!-- ── Per-agent breakdown ───────────────────────────── -->
+    <section>
+      <h2>Agents</h2>
+      <div class="agent-breakdown">
+        {stats.agents.map((agent: AgentStats) => (
+          <div class="agent-breakdown__card">
+            <div class="agent-breakdown__header">
+              <span class="agent-breakdown__emoji">{emojiMap[agent.id] || '🤖'}</span>
+              <strong>{agent.name}</strong>
+              {variantMap[agent.id] && (
+                <Badge variant={variantMap[agent.id] as 'raspi' | 'seppo' | 'dellie'}>{agent.id}</Badge>
+              )}
+            </div>
+            <div class="agent-breakdown__bars">
+              <div class="agent-breakdown__bar-group">
+                <span class="agent-breakdown__bar-label">Shifts</span>
+                <div class="agent-breakdown__bar-track">
+                  <div
+                    class="agent-breakdown__bar agent-breakdown__bar--shifts"
+                    style={`width: ${Math.round((agent.shifts / Math.max(1, stats.totalShifts)) * 100)}%`}
+                    title={`${agent.shifts} shift${agent.shifts !== 1 ? 's' : ''}`}
+                  ></div>
+                  <span class="agent-breakdown__bar-value">{agent.shifts}</span>
+                </div>
+              </div>
+              <div class="agent-breakdown__bar-group">
+                <span class="agent-breakdown__bar-label">PRs</span>
+                <div class="agent-breakdown__bar-track">
+                  <div
+                    class="agent-breakdown__bar agent-breakdown__bar--prs"
+                    style={`width: ${Math.round((agent.prs / Math.max(1, stats.totalPRs)) * 100)}%`}
+                    title={`${agent.prs} PR${agent.prs !== 1 ? 's' : ''}`}
+                  ></div>
+                  <span class="agent-breakdown__bar-value">{agent.prs}</span>
+                </div>
+              </div>
+            </div>
+            <div class="agent-breakdown__dates">
+              {agent.firstShift && (
+                <span class="agent-breakdown__date">
+                  First: {formatISODate(agent.firstShift)}
+                </span>
+              )}
+              {agent.lastShift && (
+                <span class="agent-breakdown__date">
+                  Latest: {formatISODate(agent.lastShift)}
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ── Daily activity ────────────────────────────────── -->
+    <section>
+      <h2>Daily Activity</h2>
+      {
+        stats.daily.length === 0 ? (
+          <p class="stats-empty">No activity data yet.</p>
+        ) : (
+          <div class="daily-chart" aria-label="Daily activity chart">
+            {stats.daily.map((d: DailyCount) => {
+              const total = d.shifts + d.prs;
+              const isBusiest = stats.busiestDay?.date === d.date;
+              return (
+                <div class={`daily-bar${isBusiest ? ' daily-bar--peak' : ''}`} title={`${d.shifts} shift${d.shifts !== 1 ? 's' : ''}, ${d.prs} PR${d.prs !== 1 ? 's' : ''}`}>
+                  <div
+                    class="daily-bar__fill"
+                    style={`height: ${Math.round((total / maxDaily) * 100)}%`}
+                  ></div>
+                </div>
+              );
+            })}
+          </div>
+        )
+      }
+      <div class="daily-legend">
+        {stats.daily.length > 0 && (
+          <span class="daily-legend__range">
+            {formatDate(stats.daily[0].date)} — {formatDate(stats.daily[stats.daily.length - 1].date)}
+          </span>
+        )}
+        {stats.busiestDay && (
+          <span class="daily-legend__peak">
+            🏆 Busiest: {formatDate(stats.busiestDay.date)} ({stats.busiestDay.shifts} shifts, {stats.busiestDay.prs} PRs)
+          </span>
+        )}
+      </div>
+    </section>
+
+    <p class="stats-back">
+      <a href="/">← Back to Agent Suburb</a>
+    </p>
+
+    <SiteFooter />
+  </Container>
+</Base>
+
+<style>
+  .stats-intro {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+    font-size: var(--text-sm);
+  }
+
+  .stats-empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: var(--space-6);
+    font-style: italic;
+  }
+
+  /* ── Summary grid ─────────────────────────────────────── */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+    margin-bottom: var(--space-10);
+  }
+
+  @media (max-width: 600px) {
+    .summary-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .summary-card {
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .summary-card__emoji {
+    font-size: var(--text-xl);
+    line-height: 1;
+  }
+
+  .summary-card__number {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-bold);
+    color: var(--color-text);
+    line-height: 1;
+  }
+
+  .summary-card__label {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Agent breakdown ──────────────────────────────────── */
+  .agent-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .agent-breakdown__card {
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+  }
+
+  .agent-breakdown__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .agent-breakdown__emoji {
+    font-size: var(--text-xl);
+    line-height: 1;
+  }
+
+  .agent-breakdown__bars {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .agent-breakdown__bar-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .agent-breakdown__bar-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    width: 3rem;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .agent-breakdown__bar-track {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    height: 1.25rem;
+    background: var(--color-border);
+    border-radius: var(--radius-sm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .agent-breakdown__bar {
+    height: 100%;
+    border-radius: var(--radius-sm);
+    transition: width 0.5s ease;
+  }
+
+  .agent-breakdown__bar--shifts {
+    background: var(--color-accent);
+    opacity: 0.7;
+  }
+
+  .agent-breakdown__bar--prs {
+    background: var(--color-emerald-500);
+    opacity: 0.7;
+  }
+
+  .agent-breakdown__bar-value {
+    position: absolute;
+    right: var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    color: var(--color-text);
+    line-height: 1.25rem;
+  }
+
+  .agent-breakdown__dates {
+    margin-top: var(--space-2);
+    display: flex;
+    gap: var(--space-4);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+  }
+
+  /* ── Daily activity chart ─────────────────────────────── */
+  .daily-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 120px;
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-1) var(--space-1);
+    margin-bottom: var(--space-2);
+  }
+
+  .daily-bar {
+    flex: 1;
+    min-width: 4px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .daily-bar__fill {
+    width: 100%;
+    background: var(--color-accent);
+    border-radius: 1px 1px 0 0;
+    opacity: 0.6;
+    transition: opacity var(--transition-fast);
+    min-height: 2px;
+  }
+
+  .daily-bar:hover .daily-bar__fill {
+    opacity: 1;
+  }
+
+  .daily-bar--peak .daily-bar__fill {
+    background: var(--color-amber-500);
+    opacity: 0.85;
+  }
+
+  .daily-legend {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .daily-legend__range {
+    color: var(--color-text-subtle);
+  }
+
+  .daily-legend__peak {
+    color: var(--color-amber-600);
+    font-weight: var(--font-medium);
+  }
+
+  .dark .daily-legend__peak {
+    color: var(--color-amber-400);
+  }
+
+  /* ── Back link ────────────────────────────────────────── */
+  .stats-back {
+    margin-top: var(--space-8);
+    font-size: var(--text-sm);
+  }
+
+  /* ── Mobile ───────────────────────────────────────────── */
+  @media (max-width: 480px) {
+    .summary-card__number {
+      font-size: var(--text-2xl);
+    }
+
+    .agent-breakdown__bar-group {
+      gap: var(--space-2);
+    }
+
+    .agent-breakdown__bar-label {
+      width: 2.5rem;
+    }
+
+    .daily-chart {
+      height: 80px;
+      padding: var(--space-1);
+    }
+  }
+</style>
