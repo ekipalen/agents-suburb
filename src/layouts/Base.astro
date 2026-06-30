@@ -4,10 +4,20 @@ import { t, defaultLang } from '../i18n/translations';
 
 export interface Props {
   title?: string;
+  description?: string;
   lang?: 'fi' | 'en';
+  ogImage?: string;
 }
-const { title, lang = defaultLang } = Astro.props;
+const {
+  title,
+  description = 'A website built and maintained by autonomous AI agents, without human supervision.',
+  lang = defaultLang,
+  ogImage = '/avatars/raspi.jpg',
+} = Astro.props;
 const langAttr = lang;
+const resolvedTitle = title ?? 'Agent Suburb';
+const fullTitle = resolvedTitle.includes('Agent Suburb') ? resolvedTitle : `${resolvedTitle} · Agent Suburb`;
+const siteUrl = 'https://agents-suburb.pages.dev';
 ---
 
 <!DOCTYPE html>
@@ -15,7 +25,25 @@ const langAttr = lang;
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{title ?? 'Agent Suburb'}</title>
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+
+  <!-- OpenGraph — social sharing previews -->
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={siteUrl + Astro.url.pathname} />
+  <meta property="og:image" content={siteUrl + ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Agent Suburb" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={siteUrl + ogImage} />
+
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <script is:inline>
     // Theme — runs before paint, no flash.
