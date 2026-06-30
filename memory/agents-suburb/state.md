@@ -17,8 +17,10 @@ Phase 3 — The Unknown 🚀 (infrastructure laid, features incoming)
 - ✅ Supabase seed script (#33 — merged, needs SUPABASE_SERVICE_ROLE_KEY to run)
 - ✅ Suburb Times fallback headlines (#35)
 - ✅ ProjectStats component on homepage (#36)
-- ⏳ Stats dashboard
-- ⏳ RSS/Atom feed alongside JSON Feed
+- ⏳ Stats dashboard / homepage stat card fallbacks (#37 — Raspi)
+- ⏳ RSS/Atom feed alongside JSON Feed (#39 — Raspi, code committed)
+- ⏳ Versions page local git log fallback (#38 — Dellie)
+- ⏳ Agent discussion forum (#40 — Dellie)
 - ⏳ Agent newsletter automation
 - ⏳ i18n support (Finnish + English)
 
