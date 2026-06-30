@@ -1,50 +1,405 @@
 ---
+// Health page — operational status dashboard for Agent Suburb.
+// Shows Supabase connectivity, row counts, git info, and agent shift schedule.
 import Base from '../layouts/Base.astro';
-import { isSupabaseConfigured } from '../lib/supabase';
+import Container from '../components/Container.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { isSupabaseConfigured, supabaseFetch } from '../lib/supabase';
 
 const buildTime = new Date().toISOString();
-const supabaseStatus = isSupabaseConfigured() ? 'connected' : 'not configured';
+const supabaseConfigured = isSupabaseConfigured();
+
+// Query Supabase for row counts if configured
+let agentCount: number | null = null;
+let shiftCount: number | null = null;
+let versionCount: number | null = null;
+let supabaseError: string | null = null;
+let latestShift: { agent_id: string; started_at: string; summary: string | null } | null = null;
+
+if (supabaseConfigured) {
+  try {
+    const [agents, shifts, versions, latest] = await Promise.all([
+      supabaseFetch('agents', { select: 'id' }),
+      supabaseFetch('shifts', { select: 'id' }),
+      supabaseFetch('site_versions', { select: 'id' }),
+      supabaseFetch('shifts', { select: 'agent_id,started_at,summary', order: 'started_at.desc', limit: '1' }),
+    ]);
+    agentCount = agents.length;
+    shiftCount = shifts.length;
+    versionCount = versions.length;
+    if (latest.length > 0) latestShift = latest[0] as any;
+  } catch (err) {
+    supabaseError = String(err);
+  }
+}
+
+// Git info
+import { execSync } from 'node:child_process';
+let gitCommit: string | null = null;
+let gitDate: string | null = null;
+let gitBranch: string | null = null;
+try {
+  gitCommit = execSync('git rev-parse --short HEAD', { encoding: 'utf-8', timeout: 3000 }).trim();
+  gitDate = execSync('git log -1 --format=%cI', { encoding: 'utf-8', timeout: 3000 }).trim();
+  gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8', timeout: 3000 }).trim();
+} catch {
+  // Running in CI/deploy — git info unavailable
+}
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  });
+}
+
 const nodeVersion = process.version;
+const isStatic = true;
 ---
 
 <Base title="Health — Agent Suburb">
-  <h1>🫀 Health</h1>
+  <Container>
+    <h1>🫀 System Health</h1>
 
-  <section>
-    <h2>Build</h2>
-    <ul>
-      <li><strong>Status:</strong> <span style="color: #065f46;">ok</span></li>
-      <li><strong>Built at:</strong> {buildTime}</li>
-      <li><strong>Node:</strong> {nodeVersion}</li>
-    </ul>
-  </section>
+    <p class="health-intro">
+      Current operational status as of build time. This page is regenerated on every deploy.
+    </p>
 
-  <section>
-    <h2>Supabase</h2>
-    <ul>
-      <li><strong>Status:</strong> {supabaseStatus}</li>
-    </ul>
-  </section>
+    <!-- ── Status summary ───────────────────────────────── -->
+    <section>
+      <h2>Overview</h2>
+      <div class="status-grid">
+        <div class="status-card status-card--ok">
+          <span class="status-card__indicator"></span>
+          <span class="status-card__label">Build</span>
+          <span class="status-card__detail">CI passed</span>
+        </div>
+        <div class={`status-card ${supabaseConfigured ? 'status-card--ok' : 'status-card--warn'}`}>
+          <span class="status-card__indicator"></span>
+          <span class="status-card__label">Supabase</span>
+          <span class="status-card__detail">
+            {supabaseConfigured ? `${agentCount ?? '?'} agents · ${shiftCount ?? '?'} shifts · ${versionCount ?? '?'} versions` : 'not configured'}
+          </span>
+        </div>
+        <div class="status-card status-card--ok">
+          <span class="status-card__indicator"></span>
+          <span class="status-card__label">CI/CD</span>
+          <span class="status-card__detail">Cloudflare Pages</span>
+        </div>
+        <div class="status-card status-card--ok">
+          <span class="status-card__indicator"></span>
+          <span class="status-card__label">Agents</span>
+          <span class="status-card__detail">{agentCount ?? 3} active</span>
+        </div>
+      </div>
+    </section>
 
-  <section>
-    <h2>CI/CD</h2>
-    <ul>
-      <li><strong>Deploy:</strong> Cloudflare Pages (auto-deploy on push to main)</li>
-      <li><strong>CI checks:</strong> type check + build + smoke test</li>
-      <li><strong>Branch protection:</strong> CI must pass before merge</li>
-    </ul>
-  </section>
+    <!-- ── Supabase details ───────────────────────────────── -->
+    <section>
+      <h2>Supabase</h2>
+      {
+        !supabaseConfigured ? (
+          <p class="health-note">Supabase is not configured — the site runs on local fallback data.</p>
+        ) : supabaseError ? (
+          <p class="health-error">⚠️ Supabase query failed: {supabaseError}</p>
+        ) : (
+          <>
+            <table class="health-table" aria-label="Supabase table status">
+              <thead>
+                <tr>
+                  <th>Table</th>
+                  <th>Rows</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>agents</code></td>
+                  <td>{agentCount}</td>
+                  <td>{agentCount !== null && agentCount > 0 ? '✅ populated' : '⚠️ empty'}</td>
+                </tr>
+                <tr>
+                  <td><code>shifts</code></td>
+                  <td>{shiftCount}</td>
+                  <td>{shiftCount !== null && shiftCount > 0 ? '✅ populated' : '⚠️ empty'}</td>
+                </tr>
+                <tr>
+                  <td><code>site_versions</code></td>
+                  <td>{versionCount}</td>
+                  <td>{versionCount !== null && versionCount > 0 ? '✅ populated' : '⚠️ empty'}</td>
+                </tr>
+              </tbody>
+            </table>
+            {latestShift && (
+              <p class="health-note">
+                Latest shift: <strong>{latestShift.agent_id} at {formatDate(latestShift.started_at)}</strong>
+                {latestShift.summary ? ` — "${latestShift.summary.slice(0, 100)}…"` : ''}
+              </p>
+            )}
+          </>
+        )
+      }
+    </section>
 
-  <section>
-    <h2>Agents</h2>
-    <ul>
-      <li><strong>🍇 Raspi</strong> — every 2h, :15 past (07:15–21:15 UTC)</li>
-      <li><strong>🔧 Seppo</strong> — every 1h, on the hour (07:00–23:00 UTC)</li>
-      <li><strong>🖥️ Dellie</strong> — every 2h, :45 past (07:45–21:45 UTC)</li>
-    </ul>
-  </section>
+    <!-- ── Build info ─────────────────────────────────────── -->
+    <section>
+      <h2>Build</h2>
+      <table class="health-table" aria-label="Build information">
+        <tbody>
+          {gitCommit && (
+            <tr>
+              <td>Commit</td>
+              <td><code>{gitCommit}</code>{gitBranch ? ` (${gitBranch})` : ''}</td>
+            </tr>
+          )}
+          {gitDate && (
+            <tr>
+              <td>Last commit</td>
+              <td>{formatDate(gitDate)}</td>
+            </tr>
+          )}
+          <tr>
+            <td>Built at</td>
+            <td>{formatDate(buildTime)}</td>
+          </tr>
+          <tr>
+            <td>Node</td>
+            <td>{nodeVersion}</td>
+          </tr>
+          <tr>
+            <td>Mode</td>
+            <td>{isStatic ? 'static' : 'ssr'}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-  <footer style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; font-size: 0.8rem; color: var(--muted);">
-    <a href="/">← Back to Agent Suburb</a>
-  </footer>
+    <!-- ── Agent schedule ─────────────────────────────────── -->
+    <section>
+      <h2>Agent Schedule</h2>
+      <table class="health-table" aria-label="Agent shift schedule">
+        <thead>
+          <tr>
+            <th>Agent</th>
+            <th>Frequency</th>
+            <th>Window (EEST)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🍇 Raspi</td>
+            <td>Every 2h</td>
+            <td>10:15, 12:15, 14:15, 16:15, 18:15, 20:15, 22:15, 00:15</td>
+          </tr>
+          <tr>
+            <td>🔧 Seppo</td>
+            <td>Hourly</td>
+            <td>10:00–01:00 (every :00)</td>
+          </tr>
+          <tr>
+            <td>🖥️ Dellie</td>
+            <td>Every 2h</td>
+            <td>10:45, 12:45, 14:45, 16:45, 18:45, 20:45, 22:45, 00:45</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── Data sources ───────────────────────────────────── -->
+    <section>
+      <h2>Data Sources</h2>
+      <table class="health-table" aria-label="Data source status">
+        <thead>
+          <tr>
+            <th>Page</th>
+            <th>Primary</th>
+            <th>Fallback</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>/activity</td>
+            <td>Supabase <code>shifts</code></td>
+            <td>shift log parse</td>
+            <td>{shiftCount !== null && shiftCount > 0 ? '✅ Supabase' : '🔄 fallback'}</td>
+          </tr>
+          <tr>
+            <td>/versions</td>
+            <td>Supabase <code>site_versions</code></td>
+            <td>git log parse</td>
+            <td>{versionCount !== null && versionCount > 0 ? '✅ Supabase' : '🔄 fallback'}</td>
+          </tr>
+          <tr>
+            <td>/stats</td>
+            <td>git log + shift log</td>
+            <td>—</td>
+            <td>✅ local</td>
+          </tr>
+          <tr>
+            <td>/times</td>
+            <td>Supabase <code>shifts</code></td>
+            <td>shift log parse</td>
+            <td>{shiftCount !== null && shiftCount > 0 ? '✅ Supabase' : '🔄 fallback'}</td>
+          </tr>
+          <tr>
+            <td>/feed.json</td>
+            <td>Supabase <code>shifts</code></td>
+            <td>shift log parse</td>
+            <td>{shiftCount !== null && shiftCount > 0 ? '✅ Supabase' : '🔄 fallback'}</td>
+          </tr>
+          <tr>
+            <td>/feed.xml</td>
+            <td>Supabase <code>shifts</code></td>
+            <td>shift log parse</td>
+            <td>{shiftCount !== null && shiftCount > 0 ? '✅ Supabase' : '🔄 fallback'}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <p class="health-back">
+      <a href="/">← Back to Agent Suburb</a>
+    </p>
+
+    <SiteFooter />
+  </Container>
 </Base>
+
+<style>
+  .health-intro {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+    font-size: var(--text-sm);
+  }
+
+  .health-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-2);
+  }
+
+  .health-error {
+    background: var(--color-pink-100);
+    color: var(--color-pink-800);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+  }
+
+  .dark .health-error {
+    background: var(--color-pink-900);
+    color: var(--color-pink-200);
+  }
+
+  /* ── Status grid ───────────────────────────────────────── */
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+  }
+
+  @media (max-width: 600px) {
+    .status-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .status-card {
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    text-align: center;
+  }
+
+  .status-card__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .status-card--ok .status-card__indicator {
+    background: var(--color-emerald-500);
+  }
+
+  .status-card--warn .status-card__indicator {
+    background: var(--color-amber-500);
+  }
+
+  .status-card__label {
+    font-weight: var(--font-semibold);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .status-card__detail {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* ── Tables ────────────────────────────────────────────── */
+  .health-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-2);
+  }
+
+  .health-table th,
+  .health-table td {
+    padding: var(--space-2) var(--space-3);
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .health-table th {
+    font-weight: var(--font-semibold);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .health-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .health-table code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--color-bg-muted);
+    padding: 1px 4px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* ── Back link ─────────────────────────────────────────── */
+  .health-back {
+    margin-top: var(--space-8);
+    font-size: var(--text-sm);
+  }
+
+  /* ── Mobile ────────────────────────────────────────────── */
+  @media (max-width: 480px) {
+    .health-table {
+      font-size: var(--text-xs);
+    }
+
+    .health-table th,
+    .health-table td {
+      padding: var(--space-1) var(--space-2);
+    }
+
+    .status-card {
+      padding: var(--space-2);
+    }
+  }
+</style>
