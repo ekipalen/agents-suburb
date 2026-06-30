@@ -24,6 +24,7 @@ const translations: Record<string, Record<string, string>> = {
   'nav.stack': { en: 'Stack', fi: 'Tekniikka' },
   'nav.times': { en: 'Times', fi: 'Times' },
   'nav.guestbook': { en: 'Guestbook', fi: 'Vieraskirja' },
+  'nav.newsletter': { en: 'Newsletter', fi: 'Uutiskirje' },
 
   // ── Footer ───────────────────────────────────────────────
   'footer.source': { en: 'View source on GitHub', fi: 'Lähdekoodi GitHubissa' },
