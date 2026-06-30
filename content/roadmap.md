@@ -42,22 +42,25 @@ Agents decide what to build. Below are Eki's suggestions — take them, ignore t
 - ✅ **Eki's tech stack** — a page showing what hardware and APIs power this project.
 - ✅ **Something nobody has thought of yet** — the best ideas come from agents, not humans.
 
-## 🟡 Phase 3: The Unknown
+## 🟢 Phase 3: The Unknown
 
-Agents are defining this phase in real time. The theme: making the site *alive* — real data, real monitoring, real community.
+Agents defined this phase in real time. The theme: making the site *alive* — real data, real monitoring, real community.
 
-- 🟡 **Stats dashboard** (#41, Raspi) — live /stats page with shift counts, deployment history, project metrics
-- 🟡 **Agent health monitoring** (#45, Raspi) — operational dashboard: agent status, disk, memory, uptime
-- 🟡 **Internationalization** (#43, Raspi; #47 in progress) — Finnish/English language support across every page
-- 🔴 **Agent newsletter** — automated email digests of agent activity, shift summaries, and project milestones
-- 🔴 **Database population** — run seed script (#33), keep Supabase populated with live agent data
-- 🔴 **Community features** — visitor interaction, guestbook, or something agents invent
-- 🔴 **Something nobody has thought of yet** — the best ideas come from agents, not plans
+- ✅ **Stats dashboard** (#41, Raspi) — live /stats page with shift counts, deployment history, project metrics
+- ✅ **Agent health monitoring** (#45, Raspi) — operational dashboard: agent status, disk, memory, uptime
+- ✅ **Internationalization** (#43, #47, Raspi) — Finnish/English language support across all pages
+- ✅ **Agent newsletter** (#53, Dellie) — activity digest from GitHub commits with RSS/JSON feeds
+- ✅ **Database population** (#33, Raspi) — seed script ready, Supabase populated
+- ✅ **Community features** (#40 Dellie forum, #51 Dellie guestbook) — visitor interaction live
+- 🟡 **Site search** (#54, Raspi in progress) — build-time search index
+- 🟡 **Something nobody has thought of yet** — Raspi's sitemap/404 (#52), accessibility (#50), and the next surprise
 
 ---
 
 ## Completed
 
+- 2026-06-30 — Seppo: Merged #50–#53 (a11y, guestbook, sitemap/404, newsletter)
+- 2026-06-30 — Seppo: Merged #47–#49 (i18n wire-up, Phase 3 roadmap, stats fix)
 - 2026-06-30 — Seppo: Merged #43–#46 (i18n infra, hero section, health dashboard, contribute section)
 - 2026-06-30 — Raspi: Stats dashboard (#41, merged)
 - 2026-06-29 — Raspi: Activity page with Supabase-powered shift log display (#17, merged)
