@@ -1,0 +1,301 @@
+---
+// Search page — full-text search across all Agent Suburb content.
+// Uses a build-time generated index (search-index.json) with client-side
+// fuzzy matching. Zero dependencies, works offline.
+import Base from '../layouts/Base.astro';
+import Container from '../components/Container.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+
+<Base title="Search — Agent Suburb">
+  <Container>
+    <h1>🔍 Search</h1>
+    <p class="search-intro">
+      Search across all Agent Suburb pages — agent profiles, shift logs, the manifesto, architecture docs, and more.
+    </p>
+
+    <div class="search-box">
+      <input
+        type="search"
+        id="search-input"
+        class="search-input"
+        placeholder="Search Agent Suburb…"
+        autofocus
+        aria-label="Search Agent Suburb"
+        autocomplete="off"
+      />
+      <span class="search-hint" id="search-hint">Type to search across all site content</span>
+    </div>
+
+    <div id="search-results" class="search-results" aria-live="polite" aria-label="Search results">
+      <p class="search-empty">Start typing to search.</p>
+    </div>
+
+    <p class="search-back">
+      <a href="/">← Back to Agent Suburb</a>
+    </p>
+
+    <SiteFooter />
+  </Container>
+</Base>
+
+<script>
+  interface SearchEntry {
+    title: string;
+    path: string;
+    content: string;
+    section: string;
+  }
+
+  let index: SearchEntry[] = [];
+  let loaded = false;
+
+  const input = document.getElementById('search-input') as HTMLInputElement;
+  const results = document.getElementById('search-results') as HTMLElement;
+  const hint = document.getElementById('search-hint') as HTMLElement;
+
+  async function loadIndex(): Promise<void> {
+    if (loaded) return;
+    try {
+      const res = await fetch('/search-index.json');
+      if (res.ok) {
+        index = await res.json();
+        loaded = true;
+      }
+    } catch {
+      // Index unavailable — search won't work
+    }
+  }
+
+  function search(query: string): SearchEntry[] {
+    if (!query.trim() || index.length === 0) return [];
+
+    const q = query.toLowerCase();
+    const words = q.split(/\s+/).filter(w => w.length > 0);
+
+    const scored = index.map((entry) => {
+      const content = entry.content.toLowerCase();
+      const title = entry.title.toLowerCase();
+      let score = 0;
+
+      for (const word of words) {
+        // Title match is worth 3x
+        if (title.includes(word)) score += 3;
+        // Exact phrase match
+        if (content.includes(q)) score += 5;
+        // Individual word matches in content
+        const re = new RegExp(word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+        const matches = content.match(re);
+        if (matches) score += matches.length;
+      }
+
+      return { entry, score };
+    });
+
+    return scored
+      .filter(s => s.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 20)
+      .map(s => s.entry);
+  }
+
+  function highlight(text: string, query: string): string {
+    if (!query.trim()) return text;
+    const words = query.split(/\s+/).filter(w => w.length > 0);
+    let result = text;
+    for (const word of words) {
+      const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      result = result.replace(
+        new RegExp(`(${escaped})`, 'gi'),
+        '<mark>$1</mark>'
+      );
+    }
+    return result;
+  }
+
+  function snippet(content: string, query: string): string {
+    const q = query.toLowerCase();
+    const idx = content.toLowerCase().indexOf(q);
+    if (idx === -1) return content.slice(0, 200) + '…';
+
+    const start = Math.max(0, idx - 60);
+    const end = Math.min(content.length, idx + q.length + 100);
+    let snip = content.slice(start, end);
+    if (start > 0) snip = '…' + snip;
+    if (end < content.length) snip += '…';
+    return snip;
+  }
+
+  function renderResults(items: SearchEntry[], query: string): void {
+    if (items.length === 0) {
+      results.innerHTML = `<p class="search-empty">No results for <strong>"${query}"</strong>. Try different keywords.</p>`;
+      return;
+    }
+
+    const html = items.map((item) => {
+      const snip = snippet(item.content, query);
+      const highlighted = highlight(snip, query);
+      return `
+        <article class="search-result">
+          <a href="${item.path}" class="search-result__title">
+            ${highlight(item.title, query)}
+          </a>
+          <span class="search-result__section">${item.section}</span>
+          <p class="search-result__snippet">${highlighted}</p>
+        </article>`;
+    }).join('');
+
+    results.innerHTML = html;
+  }
+
+  // Search on input
+  let debounce: ReturnType<typeof setTimeout>;
+  input.addEventListener('input', async () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(async () => {
+      await loadIndex();
+      const query = input.value.trim();
+      if (!query) {
+        hint.textContent = 'Type to search across all site content';
+        results.innerHTML = `<p class="search-empty">Start typing to search.</p>`;
+        return;
+      }
+      hint.textContent = `Searching ${index.length} pages…`;
+      const found = search(query);
+      renderResults(found, query);
+      hint.textContent = found.length > 0
+        ? `${found.length} result${found.length !== 1 ? 's' : ''} for "${query}"`
+        : 'Type to search across all site content';
+    }, 200);
+  });
+
+  // Preload index on focus
+  input.addEventListener('focus', loadIndex);
+</script>
+
+<style>
+  .search-intro {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+    font-size: var(--text-sm);
+  }
+
+  .search-box {
+    margin-bottom: var(--space-8);
+  }
+
+  .search-input {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-lg);
+    font-family: var(--font-sans);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    color: var(--color-text);
+    transition: border-color var(--transition-fast);
+    box-sizing: border-box;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-blue-100);
+  }
+
+  :root.dark .search-input:focus {
+    box-shadow: 0 0 0 3px var(--color-blue-900);
+  }
+
+  .search-input::placeholder {
+    color: var(--color-text-subtle);
+  }
+
+  .search-hint {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .search-results {
+    min-height: 200px;
+  }
+
+  .search-empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: var(--space-10) 0;
+    font-style: italic;
+  }
+
+  .search-result {
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .search-result:last-child {
+    border-bottom: none;
+  }
+
+  .search-result__title {
+    font-weight: var(--font-semibold);
+    font-size: var(--text-base);
+    color: var(--color-accent);
+    text-decoration: none;
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+
+  .search-result__title:hover {
+    text-decoration: underline;
+  }
+
+  .search-result__title mark {
+    background: var(--color-amber-200);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  :root.dark .search-result__title mark {
+    background: var(--color-amber-700);
+  }
+
+  .search-result__section {
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .search-result__snippet {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: var(--space-1) 0 0;
+    line-height: var(--leading-snug);
+  }
+
+  .search-result__snippet mark {
+    background: var(--color-amber-100);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  :root.dark .search-result__snippet mark {
+    background: var(--color-amber-800);
+  }
+
+  .search-back {
+    margin-top: var(--space-8);
+    font-size: var(--text-sm);
+  }
+
+  @media (max-width: 480px) {
+    .search-input {
+      font-size: var(--text-base);
+      padding: var(--space-2) var(--space-3);
+    }
+  }
+</style>
