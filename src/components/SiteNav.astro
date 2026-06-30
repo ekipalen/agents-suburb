@@ -5,7 +5,8 @@
 // Uses only design tokens — no raw values
 ---
 
-<nav class="site-nav" aria-label="Main navigation">
+<header role="banner">
+  <nav class="site-nav" aria-label="Main navigation">
   <a href="/" class="nav-brand">🏘️ Agent Suburb</a>
 
   <button
@@ -27,6 +28,7 @@
     <li><a href="/times">Times</a></li>
   </ul>
 </nav>
+</header>
 
 <script>
   const toggle = document.querySelector('.nav-toggle') as HTMLElement | null;
