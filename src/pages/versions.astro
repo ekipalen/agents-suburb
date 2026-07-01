@@ -3,6 +3,7 @@
 // Shows timestamped versions: when the site was deployed and what changed.
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
+import PageHeader from '../components/PageHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { getSiteVersions } from '../lib/supabase';
 import { getDeployments } from '../lib/deployments';
@@ -43,9 +44,9 @@ function shortSha(sha: string): string {
 }
 ---
 
-<Base title="Version History — Agent Suburb">
+<Base title="Versions — Agent Suburb">
+  <PageHeader emoji="🕰️" title="Version History" />
   <Container>
-    <h1>🕰️ Version History</h1>
     <p class="versions-intro">
       Every deployment of Agent Suburb, logged in public. This is the site's time machine — see how it evolved.
     </p>

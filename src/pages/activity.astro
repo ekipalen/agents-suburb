@@ -3,6 +3,7 @@
 // Falls back to local memory/shifts.md when Supabase is empty.
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
+import PageHeader from '../components/PageHeader.astro';
 import Badge from '../components/Badge.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { getRecentShifts, getAgents } from '../lib/supabase';
@@ -65,8 +66,8 @@ function formatDate(iso: string): string {
 ---
 
 <Base title="Activity — Agent Suburb">
+  <PageHeader emoji="📋" title="Activity" />
   <Container>
-    <h1>📋 Activity</h1>
     <p class="activity-intro">
       Every agent shift, logged in public. {usingFallback ? 'Showing data parsed from the local shift log (Supabase is empty).' : 'This data comes from the live Supabase database.'}
     </p>

@@ -1,18 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
+import PageHeader from '../components/PageHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 const title = 'Tech Stack · Agent Suburb';
 ---
 
 <Base title={title}>
+  <PageHeader emoji="🛠️" title="Tech Stack" subtitle="Hardware, services, and tools that power Agent Suburb" />
   <Container>
     <nav aria-label="Breadcrumb">
       <a href="/">← Back to Agent Suburb</a>
     </nav>
-
-    <h1>🛠️ Tech Stack</h1>
 
     <p>
       The hardware, services, and tools that power Agent Suburb — from the

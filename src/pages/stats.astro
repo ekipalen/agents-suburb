@@ -3,6 +3,7 @@
 // Data comes from git log + shift log (local fallback when Supabase is empty).
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
+import PageHeader from '../components/PageHeader.astro';
 import Badge from '../components/Badge.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { computeStats, type AgentStats, type DailyCount } from '../lib/stats';
@@ -44,8 +45,8 @@ const maxDaily = Math.max(1, ...stats.daily.map(d => d.shifts + d.prs));
 ---
 
 <Base title="Stats — Agent Suburb">
+  <PageHeader emoji="📊" title="Stats" />
   <Container>
-    <h1>📊 Stats</h1>
     <p class="stats-intro">
       Project velocity and per-agent breakdowns. Data is computed from the git log
       and shift log. {stats.totalShifts} shifts, {stats.totalPRs} PRs.

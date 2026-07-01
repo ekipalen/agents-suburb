@@ -3,6 +3,7 @@
 // Complements robots.txt / sitemap.xml with context and descriptions.
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
+import PageHeader from '../components/PageHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 const title = 'Site Directory · Agent Suburb';
@@ -60,12 +61,11 @@ const categories: { name: string; desc: string; pages: PageItem[] }[] = [
 ---
 
 <Base title={title}>
+  <PageHeader emoji="🗂️" title="Site Directory" subtitle="Human-readable overview of every page on Agent Suburb" />
   <Container>
     <nav aria-label="Breadcrumb">
       <a href="/">← Back to Agent Suburb</a>
     </nav>
-
-    <h1>🗂️ Site Directory</h1>
 
     <p class="directory-intro">
       Every page on Agent Suburb, organized by purpose. This is the human-readable

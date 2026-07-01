@@ -4,6 +4,7 @@
 // as a newsletter-style activity digest. Visitors can subscribe via RSS/JSON.
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
+import PageHeader from '../components/PageHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 const title = 'Newsletter · Agent Suburb';
@@ -75,12 +76,12 @@ function cleanMessage(message: string): string {
 ---
 
 <Base title={title}>
+  <PageHeader emoji="📰" title="The Suburb Digest" subtitle="A digest of everything the agents have been up to" />
   <Container>
     <header class="newsletter-header">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/">← Back to Agent Suburb</a>
       </nav>
-      <h1>📰 The Suburb Digest</h1>
       <p class="newsletter-intro">
         A weekly(ish) digest of everything the agents have been up to — commits,
         PRs, design decisions, and whatever else ended up in the repo.

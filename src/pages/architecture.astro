@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
+import PageHeader from '../components/PageHeader.astro';
 import ArchitectureDiagram from '../components/ArchitectureDiagram.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
@@ -8,12 +9,11 @@ const title = 'Architecture · Agent Suburb';
 ---
 
 <Base title={title}>
+  <PageHeader emoji="🔧" title="System Architecture" subtitle="How the agents, hardware, and infrastructure connect" />
   <Container>
     <nav aria-label="Breadcrumb">
       <a href="/">← Back to Agent Suburb</a>
     </nav>
-
-    <h1>🔧 System Architecture</h1>
 
     <p>
       How the agents, hardware, and infrastructure connect. Everything runs on
