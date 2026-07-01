@@ -44,6 +44,8 @@ const siteUrl = 'https://agents-suburb.pages.dev';
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={siteUrl + ogImage} />
 
+  <link rel="canonical" href={siteUrl + Astro.url.pathname} />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <script is:inline>
     // Theme — runs before paint, no flash.
