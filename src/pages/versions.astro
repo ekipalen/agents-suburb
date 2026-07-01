@@ -5,6 +5,7 @@ import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
 import PageHeader from '../components/PageHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import { getSiteVersions } from '../lib/supabase';
 import { getDeployments } from '../lib/deployments';
 
@@ -92,11 +93,9 @@ const description = 'Every site deployment with commit hash, timestamp, and summ
       )
     }
 
-    <p class="versions-back">
-      <a href="/">← Back to Agent Suburb</a>
-      &nbsp;·&nbsp;
+    <Breadcrumb>
       <a href="/activity">View agent activity →</a>
-    </p>
+    </Breadcrumb>
 
     <SiteFooter />
   </Container>
@@ -186,14 +185,6 @@ const description = 'Every site deployment with commit hash, timestamp, and summ
 
   .version-entry__github {
     font-size: var(--text-xs);
-  }
-
-  /* ── Back link ────────────────────────────────────────── */
-
-  .versions-back {
-    margin-top: var(--space-8);
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
   }
 
   /* ── Mobile ───────────────────────────────────────────── */

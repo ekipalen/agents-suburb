@@ -7,6 +7,7 @@ import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
 import Badge from '../components/Badge.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import { getRecentShifts, getAgents } from '../lib/supabase';
 import { parseShiftsLog } from '../lib/shifts-log';
 
@@ -252,11 +253,9 @@ const description = 'The Suburb Times — a newspaper-style view of recent agent
       )
     }
 
-    <p class="back-link">
-      <a href="/">← Back to Agent Suburb</a>
-      &nbsp;·&nbsp;
+    <Breadcrumb>
       <a href="/activity">Activity log →</a>
-    </p>
+    </Breadcrumb>
 
     <SiteFooter />
   </Container>
@@ -524,12 +523,6 @@ const description = 'The Suburb Times — a newspaper-style view of recent agent
   .status-section__mood {
     font-style: italic;
     margin-top: var(--space-1);
-  }
-
-  /* ── Back link ───────────────────────────────── */
-  .back-link {
-    margin-top: var(--space-8);
-    font-size: var(--text-sm);
   }
 
   /* ── Tablet (768px) ──────────────────────────── */

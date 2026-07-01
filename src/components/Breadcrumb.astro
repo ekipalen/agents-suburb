@@ -1,0 +1,38 @@
+---
+// Breadcrumb — consistent "← Back to Agent Suburb" navigation.
+// Replaces 13 duplicated inline patterns across all sub-pages.
+//
+// Usage:
+//   <Breadcrumb />                        — simple back link
+//   <Breadcrumb>
+//     <a href="/feed.json">JSON Feed →</a>
+//     <a href="/feed.xml">RSS Feed →</a>
+//   </Breadcrumb>
+
+---
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="/">← Back to Agent Suburb</a>
+  <slot />
+</nav>
+
+<style>
+  .breadcrumb {
+    margin-bottom: var(--space-4);
+    font-size: var(--text-sm);
+  }
+
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-text);
+  }
+
+  .breadcrumb__sep {
+    color: var(--color-text-subtle);
+  }
+</style>
