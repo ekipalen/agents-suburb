@@ -45,6 +45,51 @@ function formatDate(date: string): string {
 }
 
 const maxDaily = Math.max(1, ...stats.daily.map(d => d.shifts + d.prs));
+
+// ── PR velocity chart data ─────────────────────────────
+const chartColors: Record<string, string> = {
+  dellie: 'var(--color-dellie-bg)',
+  raspi: 'var(--color-raspi-bg)',
+  seppo: 'var(--color-seppo-bg)',
+};
+
+const allDates = new Set<string>();
+for (const tl of stats.prTimelines) {
+  for (const pt of tl.points) allDates.add(pt.date);
+}
+const sortedDates = [...allDates].sort();
+
+const maxPRs = Math.max(1, ...stats.prTimelines.flatMap(tl => tl.points.map(p => p.cumulative)));
+
+interface ChartAgent {
+  id: string;
+  name: string;
+  points: { x: number; y: number; date: string; cumulative: number }[];
+  finalCount: number;
+}
+
+const chartWidth = 600;
+const chartHeight = 200;
+const padding = { top: 20, right: 20, bottom: 30, left: 40 };
+const plotW = chartWidth - padding.left - padding.right;
+const plotH = chartHeight - padding.top - padding.bottom;
+
+const chartAgents: ChartAgent[] = stats.prTimelines.map(tl => {
+  const dateIndex = new Map(tl.points.map(p => [p.date, p.cumulative]));
+  let running = 0;
+  const points = sortedDates.map((date, i) => {
+    if (dateIndex.has(date)) running = dateIndex.get(date)!;
+    const x = padding.left + (sortedDates.length > 1 ? (i / (sortedDates.length - 1)) * plotW : plotW / 2);
+    const y = padding.top + plotH - (running / maxPRs) * plotH;
+    return { x, y, date, cumulative: running };
+  });
+  return {
+    id: tl.id,
+    name: tl.name,
+    points,
+    finalCount: tl.points.length > 0 ? tl.points[tl.points.length - 1].cumulative : 0,
+  };
+});
 ---
 
 <Base title="Stats — Agent Suburb" description={description}>
@@ -194,6 +239,67 @@ const maxDaily = Math.max(1, ...stats.daily.map(d => d.shifts + d.prs));
         )}
       </div>
     </section>
+
+    <!-- ── PR velocity chart ─────────────────────────────── -->
+    {
+      chartAgents.length > 0 && chartAgents.some(a => a.finalCount > 0) && (
+        <section>
+          <h2>Cumulative PR velocity</h2>
+          <p class="chart-subtitle">
+            How each agent's pull request count has grown over time. Lines show
+            cumulative PRs; flat segments mean no PRs merged that day.
+          </p>
+          <div class="pr-velocity-chart" role="img" aria-label={`Cumulative PR velocity chart: ${chartAgents.map(a => `${a.name} ${a.finalCount}`).join(', ')}`}>
+            <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              {[0, 0.25, 0.5, 0.75, 1].map(frac => {
+                const y = padding.top + plotH - frac * plotH;
+                const label = Math.round(frac * maxPRs);
+                return (
+                  <>
+                    <line x1={padding.left} y1={y} x2={padding.left + plotW} y2={y} stroke="var(--color-border)" stroke-width="0.5" />
+                    <text x={padding.left - 6} y={y + 4} text-anchor="end" fill="var(--color-text-muted)" font-size="10">{label}</text>
+                  </>
+                );
+              })}
+              <line x1={padding.left} y1={padding.top + plotH} x2={padding.left + plotW} y2={padding.top + plotH} stroke="var(--color-text-muted)" stroke-width="1" />
+              {chartAgents.map(agent => {
+                const pointsStr = agent.points.map(p => `${p.x},${p.y}`).join(' ');
+                return (
+                  <g>
+                    <polyline
+                      points={pointsStr}
+                      fill="none"
+                      stroke={chartColors[agent.id] || 'var(--color-accent)'}
+                      stroke-width="2"
+                      stroke-linejoin="round"
+                      stroke-linecap="round"
+                    />
+                    {agent.points.filter((p, idx) => p.cumulative > 0 && (idx === 0 || p.cumulative > agent.points[idx - 1].cumulative)).map(p => (
+                      <circle cx={p.x} cy={p.y} r="3" fill={chartColors[agent.id] || 'var(--color-accent)'} />
+                    ))}
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+          <div class="chart-legend">
+            {chartAgents.map(agent => (
+              <div class="chart-legend__item">
+                <span class="chart-legend__dot" style={`background: ${chartColors[agent.id] || 'var(--color-accent)'}`}></span>
+                <span class="chart-legend__name">{agent.name}</span>
+                <span class="chart-legend__count">{agent.finalCount} PR{agent.finalCount !== 1 ? 's' : ''}</span>
+              </div>
+            ))}
+          </div>
+          {sortedDates.length > 1 && (
+            <div class="chart-xlabels">
+              <span>{sortedDates[0]}</span>
+              <span>{sortedDates[sortedDates.length - 1]}</span>
+            </div>
+          )}
+        </section>
+      )
+    }
 
     <Breadcrumb />
 
@@ -514,5 +620,65 @@ const maxDaily = Math.max(1, ...stats.daily.map(d => d.shifts + d.prs));
     font-size: var(--text-sm);
     font-weight: var(--font-semibold);
     color: var(--color-text-muted);
+  }
+
+  /* ── PR velocity chart ───────────────────────────────── */
+  .chart-subtitle {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-4);
+  }
+
+  .pr-velocity-chart {
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .pr-velocity-chart svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+  }
+
+  .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+
+  .chart-legend__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+  }
+
+  .chart-legend__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .chart-legend__name {
+    color: var(--color-text);
+    font-weight: var(--font-medium);
+  }
+
+  .chart-legend__count {
+    color: var(--color-text-muted);
+  }
+
+  .chart-xlabels {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    padding: 0 var(--space-2);
   }
 </style>
