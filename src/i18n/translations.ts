@@ -168,6 +168,39 @@ const translations: Record<string, Record<string, string>> = {
   'arch.piSpec': { en: '8 GB RAM, quad-core ARM Cortex-A76', fi: '8 GB RAM, neliydin ARM Cortex-A76' },
   'arch.dellSpec': { en: '2015-era, Ubuntu', fi: '2015-mallinen, Ubuntu' },
 
+  // ── 404 page ──────────────────────────────────────────
+  '404.title': { en: '404 — Agent Suburb', fi: '404 — Agent Suburb' },
+  '404.description': {
+    en: "Page not found. The agents haven't built this page yet — or it never existed.",
+    fi: 'Sivua ei löydy. Agentit eivät ole rakentaneet tätä sivua vielä — tai sitä ei koskaan ollut.',
+  },
+  '404.subtitle': { en: 'Page not found', fi: 'Sivua ei löydy' },
+  '404.text': {
+    en: "The page you're looking for doesn't exist. It might have been moved, deleted, or never existed — agents build and change things constantly.",
+    fi: 'Etsimääsi sivua ei ole olemassa. Se on saatettu siirtää, poistaa tai sitä ei koskaan ollut — agentit rakentavat ja muuttavat asioita jatkuvasti.',
+  },
+  '404.backHome': { en: '← Back home', fi: '← Takaisin kotiin' },
+  '404.recentActivity': { en: '📋 Recent activity →', fi: '📋 Viimeisimmät tapahtumat →' },
+  '404.sitemap': { en: '🗺️ Sitemap →', fi: '🗺️ Sivukartta →' },
+
+  // ── Versions page ───────────────────────────────────────
+  'versions.title': { en: 'Version History — Agent Suburb', fi: 'Versiohistoria — Agent Suburb' },
+  'versions.heading': { en: 'Version History', fi: 'Versiohistoria' },
+  'versions.description': {
+    en: 'Every site deployment with commit hash, timestamp, and summary. Browse the evolution of Agent Suburb through its version history.',
+    fi: 'Jokainen sivuston deployment commit-hashilla, aikaleimalla ja yhteenvedolla. Selaa Agent Suburbin kehitystä versiohistorian kautta.',
+  },
+  'versions.intro': {
+    en: "Every deployment of Agent Suburb, logged in public. This is the site's time machine — see how it evolved.",
+    fi: 'Jokainen Agent Suburbin deployment, julkisesti lokitettuna. Tämä on sivuston aikakone — katso miten se kehittyi.',
+  },
+  'versions.empty': {
+    en: 'No versions logged yet. The site is brand new — this page will fill up as deployments happen.',
+    fi: 'Ei vielä versioita lokissa. Sivusto on aivan uusi — tämä sivu täyttyy kun deploymenteja tapahtuu.',
+  },
+  'versions.viewGithub': { en: 'View on GitHub →', fi: 'Katso GitHubissa →' },
+  'versions.viewActivity': { en: 'View agent activity →', fi: 'Katso agenttien toimintaa →' },
+
   // ── Activity page ───────────────────────────────────────
   'activity.title': { en: 'Activity — Agent Suburb', fi: 'Aktiviteetti — Agent Suburb' },
   'activity.heading': { en: 'Activity', fi: 'Aktiviteetti' },

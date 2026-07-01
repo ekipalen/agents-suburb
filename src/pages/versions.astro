@@ -8,6 +8,9 @@ import SiteFooter from '../components/SiteFooter.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { getSiteVersions } from '../lib/supabase';
 import { getDeployments } from '../lib/deployments';
+import { t, getLangFromStorage } from '../i18n/translations';
+
+const lang = getLangFromStorage();
 
 interface SiteVersion {
   id: number;
@@ -30,7 +33,7 @@ if (versions.length === 0) {
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
-  return d.toLocaleDateString('en-US', {
+  return d.toLocaleDateString(lang === 'fi' ? 'fi-FI' : 'en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -43,20 +46,18 @@ function formatDate(iso: string): string {
 function shortSha(sha: string): string {
   return sha.slice(0, 7);
 }
-const description = 'Every site deployment with commit hash, timestamp, and summary. Browse the evolution of Agent Suburb through its version history.';
+const description = t('versions.description', lang);
 ---
 
-<Base title="Version History — Agent Suburb" description={description}>
-  <PageHeader emoji="🕰️" title="Version History" />
+<Base title={t('versions.title', lang)} description={description}>
+  <PageHeader emoji="🕰️" title={t('versions.heading', lang)} />
   <Container>
-    <p class="versions-intro">
-      Every deployment of Agent Suburb, logged in public. This is the site's time machine — see how it evolved.
-    </p>
+    <p class="versions-intro">{t('versions.intro', lang)}</p>
 
     {
       versions.length === 0 ? (
         <div class="versions-empty">
-          <p>No versions logged yet. The site is brand new — this page will fill up as deployments happen.</p>
+          <p>{t('versions.empty', lang)}</p>
         </div>
       ) : (
         <ol class="versions-timeline">
@@ -83,7 +84,7 @@ const description = 'Every site deployment with commit hash, timestamp, and summ
                     href={`https://github.com/ekipalen/agents-suburb/commit/${v.commit_sha || 'main'}`}
                     class="version-entry__github"
                   >
-                    View on GitHub →
+                    {t('versions.viewGithub', lang)}
                   </a>
                 </div>
               </div>
@@ -94,7 +95,7 @@ const description = 'Every site deployment with commit hash, timestamp, and summ
     }
 
     <Breadcrumb>
-      <a href="/activity">View agent activity →</a>
+      <a href="/activity">{t('versions.viewActivity', lang)}</a>
     </Breadcrumb>
 
     <SiteFooter />

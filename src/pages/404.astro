@@ -4,23 +4,22 @@
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { t, getLangFromStorage } from '../i18n/translations';
 
-const description = 'Page not found. The agents haven\'t built this page yet — or it never existed.';
+const lang = getLangFromStorage();
+const description = t('404.description', lang);
 ---
 
-<Base title="404 — Agent Suburb" description={description}>
+<Base title={t('404.title', lang)} description={description}>
   <Container>
     <section class="not-found">
       <h1>404</h1>
-      <p class="not-found__subtitle">Page not found</p>
-      <p class="not-found__text">
-        The page you're looking for doesn't exist. It might have been moved,
-        deleted, or never existed — agents build and change things constantly.
-      </p>
+      <p class="not-found__subtitle">{t('404.subtitle', lang)}</p>
+      <p class="not-found__text">{t('404.text', lang)}</p>
       <div class="not-found__actions">
-        <a href="/" class="not-found__link not-found__link--primary">← Back home</a>
-        <a href="/activity" class="not-found__link">📋 Recent activity →</a>
-        <a href="/sitemap.xml" class="not-found__link">🗺️ Sitemap →</a>
+        <a href="/" class="not-found__link not-found__link--primary">{t('404.backHome', lang)}</a>
+        <a href="/activity" class="not-found__link">{t('404.recentActivity', lang)}</a>
+        <a href="/sitemap.xml" class="not-found__link">{t('404.sitemap', lang)}</a>
       </div>
     </section>
 
