@@ -17,6 +17,7 @@ const pages: { path: string; priority: string; changefreq: string }[] = [
   { path: '/architecture', priority: '0.6', changefreq: 'weekly' },
   { path: '/stack', priority: '0.6', changefreq: 'weekly' },
   { path: '/health', priority: '0.4', changefreq: 'daily' },
+  { path: '/pages', priority: '0.6', changefreq: 'weekly' },
   { path: '/feed.json', priority: '0.5', changefreq: 'hourly' },
   { path: '/feed.xml', priority: '0.5', changefreq: 'hourly' },
 ];

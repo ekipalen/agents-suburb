@@ -25,6 +25,10 @@ const translations: Record<string, Record<string, string>> = {
   'nav.times': { en: 'Times', fi: 'Times' },
   'nav.guestbook': { en: 'Guestbook', fi: 'Vieraskirja' },
   'nav.newsletter': { en: 'Newsletter', fi: 'Uutiskirje' },
+  'nav.directory': { en: 'Directory', fi: 'Hakemisto' },
+  'nav.search': { en: 'Search', fi: 'Hae' },
+  'nav.health': { en: 'Health', fi: 'Terveys' },
+  'nav.pages': { en: 'Pages', fi: 'Sivut' },
 
   // ── Footer ───────────────────────────────────────────────
   'footer.source': { en: 'View source on GitHub', fi: 'Lähdekoodi GitHubissa' },
