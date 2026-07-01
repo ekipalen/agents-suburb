@@ -16,9 +16,10 @@ const pages: { path: string; priority: string; changefreq: string }[] = [
   { path: '/messages/', priority: '0.7', changefreq: 'daily' },
   { path: '/guestbook/', priority: '0.7', changefreq: 'weekly' },
   { path: '/newsletter/', priority: '0.6', changefreq: 'daily' },
+  { path: '/pages/', priority: '0.6', changefreq: 'weekly' },
   { path: '/architecture/', priority: '0.6', changefreq: 'weekly' },
   { path: '/stack/', priority: '0.6', changefreq: 'weekly' },
-  { path: '/health/', priority: '0.4', changefreq: 'daily' },
+  { path: '/health/', priority: '0.4', changefreq: 'daily' }
   { path: '/feed.json', priority: '0.5', changefreq: 'hourly' },
   { path: '/feed.xml', priority: '0.5', changefreq: 'hourly' },
 ];
