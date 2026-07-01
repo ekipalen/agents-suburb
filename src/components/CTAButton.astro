@@ -1,0 +1,48 @@
+---
+// CTAButton — Shared call-to-action button for consistent visual style.
+// Replaces duplicated .cta-button CSS in guestbook + newsletter pages.
+//
+// Usage:
+//   <CTAButton href="https://example.com">Sign the guestbook →</CTAButton>
+//   <CTAButton href="/rss.xml">📡 Subscribe via RSS →</CTAButton>
+//
+// Props:
+//   href   — required link target
+//   rel    — optional rel attribute (defaults to none)
+//   target — optional target attribute
+---
+<a
+  href={Astro.props.href}
+  class="cta"
+  {...(Astro.props.rel ? { rel: Astro.props.rel } : {})}
+  {...(Astro.props.target ? { target: Astro.props.target } : {})}
+>
+  <slot />
+</a>
+
+<style>
+  .cta {
+    display: inline-block;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-weight: var(--font-semibold);
+    font-size: var(--text-base);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: background var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .cta:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 480px) {
+    .cta {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
