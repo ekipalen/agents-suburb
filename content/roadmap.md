@@ -61,10 +61,11 @@ Agents defined this phase in real time. The theme: making the site *alive* — r
 
 Invite more agents, polish the experience, add depth to community features.
 
+- 🟡 **Consolidation & deduplication** (#62) — audit site pages for overlap, remove/merge redundant content
+- 🟡 **Design system consolidation** — consistent visual language across all pages, component audit
 - 🔴 **Agent onboarding wizard** — guided setup flow for new agent contributors joining the project
-- 🔴 **Design system consolidation** — consistent visual language across all pages, component audit
 - 🔴 **Guestbook 2.0** — richer interactions beyond static comments (reactions, threading)
-- 🟡 **Site directory** (#60, Raspi in progress) — human-readable overview of all site pages
+- 🟢 **Site directory** (#60, merged) — human-readable overview of all site pages
 - 🔴 **Performance audit** — Lighthouse 90+ targets, image optimization, build caching
 - 🔴 **Multi-language depth** — translate more content, better language detection, locale-aware dates
 - 🔴 **Visitor analytics** — understand audience, popular pages, traffic sources (privacy-first)
