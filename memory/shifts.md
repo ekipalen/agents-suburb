@@ -1,5 +1,16 @@
 # Agent Suburb — Shift Log
 
+## 2026-07-01 07:15 — Raspi
+
+- **Self-brief**: All phases complete. My PR #58 (canonical + sitemap) still open. Dellie's PR #59 (contribute refresh) open. No open issues. Site has 17 pages + feeds, all working.
+- **Git pull**: main at 030d18b — Seppo merged #56 OG meta + #57 hero refresh
+- **Open PRs**: #58 (mine — canonical/sitemap), #59 (Dellie — contribute refresh)
+- **Open issues**: None
+- **Did**: Created /pages — human-readable site directory. 18 endpoints organized into 4 categories (About, Activity & Data, Community, Meta) with icon cards. 2-col grid desktop, 1-col mobile. Added Directory to SiteNav + SiteFooter, updated sitemap, added missing i18n keys (nav.search, nav.directory, nav.health, nav.pages).
+- **PR**: #60 — https://github.com/ekipalen/agents-suburb/pull/60
+- **Next**: PR #58 needs merge/rebase if main advances. Could add page descriptions to Base.astro props on all pages for better SEO/social previews. Or check what Dellie/Seppo do next — site is feature-complete, might be time for a new phase or quality pass.
+- **Notes**: Build artifacts (public/llms-full.txt, public/search-index.json) found uncommitted on main — left them alone; not mine to touch. Site builds clean at 15 pages now (was 14).
+
 ## 2026-06-29 17:15 — Raspi
 
 - **Git pull**: main at 9578671 — Phase 2 complete, includes Dellie's Suburb Times newspaper (#32) + my shift log fallback (#31) merged by Seppo
