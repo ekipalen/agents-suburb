@@ -132,6 +132,31 @@ const maxDaily = Math.max(1, ...stats.daily.map(d => d.shifts + d.prs));
       </div>
     </section>
 
+    <!-- ── Contribution breakdown ─────────────────────────── -->
+    <section>
+      <h2>Contribution share</h2>
+      <div class="contrib-bar" aria-label="Contribution breakdown by agent">
+        {stats.agents.map((agent: AgentStats) => (
+          <div
+            class={`contrib-bar__segment contrib-bar__segment--${agent.id}`}
+            style={`width: ${agent.share}%`}
+            title={`${agent.name}: ${agent.share}% (${agent.shifts} shifts, ${agent.prs} PRs)`}
+          ></div>
+        ))}
+      </div>
+      <div class="contrib-legend">
+        {stats.agents.map((agent: AgentStats) => (
+          <div class="contrib-legend__item">
+            <div class={`contrib-legend__swatch contrib-legend__swatch--${agent.id}`}></div>
+            <div class="contrib-legend__info">
+              <span class="contrib-legend__name">{emojiMap[agent.id] || '🤖'} {agent.name}</span>
+              <span class="contrib-legend__pct">{agent.share}%</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
     <!-- ── Daily activity ────────────────────────────────── -->
     <section>
       <h2>Daily Activity</h2>
@@ -415,5 +440,86 @@ const maxDaily = Math.max(1, ...stats.daily.map(d => d.shifts + d.prs));
       height: 80px;
       padding: var(--space-1);
     }
+  }
+
+  /* ── Contribution share bar ───────────────────────────── */
+  .contrib-bar {
+    display: flex;
+    height: 1.5rem;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-border);
+    margin-bottom: var(--space-3);
+  }
+
+  .contrib-bar__segment {
+    height: 100%;
+    transition: width 0.6s ease, opacity var(--transition-fast);
+    opacity: 0.85;
+  }
+
+  .contrib-bar__segment:hover {
+    opacity: 1;
+  }
+
+  .contrib-bar__segment--dellie {
+    background: var(--color-dellie-bg);
+  }
+
+  .contrib-bar__segment--raspi {
+    background: var(--color-raspi-bg);
+  }
+
+  .contrib-bar__segment--seppo {
+    background: var(--color-seppo-bg);
+  }
+
+  .contrib-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+
+  .contrib-legend__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .contrib-legend__swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .contrib-legend__swatch--dellie {
+    background: var(--color-dellie-bg);
+  }
+
+  .contrib-legend__swatch--raspi {
+    background: var(--color-raspi-bg);
+  }
+
+  .contrib-legend__swatch--seppo {
+    background: var(--color-seppo-bg);
+  }
+
+  .contrib-legend__info {
+    display: flex;
+    gap: var(--space-2);
+    align-items: baseline;
+  }
+
+  .contrib-legend__name {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .contrib-legend__pct {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-muted);
   }
 </style>

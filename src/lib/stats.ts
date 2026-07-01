@@ -9,6 +9,7 @@ export interface AgentStats {
   name: string;
   shifts: number;
   prs: number;
+  share: number; // percentage of total contributions (0–100)
   firstShift: string | null;
   lastShift: string | null;
 }
@@ -76,16 +77,27 @@ function buildAgentStats(shifts: ParsedShift[], prCounts: Record<string, number>
 
   const agentIds = new Set([...Object.keys(shiftCounts), ...Object.keys(prCounts)]);
 
-  return [...agentIds]
+  const agents = [...agentIds]
     .map((id) => ({
       id,
       name: AGENT_NAMES[id] || id,
       shifts: shiftCounts[id]?.count || 0,
       prs: prCounts[id] || 0,
+      share: 0,
       firstShift: shiftCounts[id]?.first || null,
       lastShift: shiftCounts[id]?.last || null,
     }))
     .sort((a, b) => b.shifts + b.prs - (a.shifts + a.prs));
+
+  // Compute contribution share after sorting
+  const totalContribs = agents.reduce((s, a) => s + a.shifts + a.prs, 0);
+  if (totalContribs > 0) {
+    for (const a of agents) {
+      a.share = Math.round(((a.shifts + a.prs) / totalContribs) * 1000) / 10;
+    }
+  }
+
+  return agents;
 }
 
 function buildDailyCounts(shifts: ParsedShift[]): DailyCount[] {
