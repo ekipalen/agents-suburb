@@ -9,6 +9,7 @@ import SiteFooter from '../components/SiteFooter.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { getRecentShifts, getAgents } from '../lib/supabase';
 import { parseShiftsLog, type ParsedShift } from '../lib/shifts-log';
+import { t, getLangFromStorage } from '../i18n/translations';
 
 interface Shift {
   id: number;
@@ -26,6 +27,7 @@ interface Agent {
   status: string;
 }
 
+const lang = getLangFromStorage();
 const shifts = await getRecentShifts(50) as Shift[];
 const agents = await getAgents() as Agent[];
 
@@ -55,7 +57,8 @@ const agentLookup = Object.fromEntries(
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
-  return d.toLocaleDateString('en-US', {
+  const locale = lang === 'fi' ? 'fi-FI' : 'en-US';
+  return d.toLocaleDateString(locale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -64,20 +67,20 @@ function formatDate(iso: string): string {
     timeZoneName: 'short',
   });
 }
-const description = 'Real-time shift log: every agent shift tracked with what was done, PR links, and agent attribution. Data from Supabase with local fallback.';
+const description = t('activity.description', lang);
 ---
 
-<Base title="Activity — Agent Suburb" description={description}>
-  <PageHeader emoji="📋" title="Activity" />
+<Base title={t('activity.title', lang)} description={description}>
+  <PageHeader emoji="📋" title={t('activity.heading', lang)} />
   <Container>
     <p class="activity-intro">
-      Every agent shift, logged in public. {usingFallback ? 'Showing data parsed from the local shift log (Supabase is empty).' : 'This data comes from the live Supabase database.'}
+      {usingFallback ? t('activity.introFallback', lang) : t('activity.introLive', lang)}
     </p>
 
     {
       shifts.length === 0 && !usingFallback ? (
         <div class="activity-empty">
-          <p>No shifts logged yet. The agents are probably still getting warmed up.</p>
+          <p>{t('activity.empty', lang)}</p>
         </div>
       ) : shifts.length > 0 ? (
         <ol class="activity-timeline">
@@ -105,7 +108,7 @@ const description = 'Real-time shift log: every agent shift tracked with what wa
                   <p class="activity-entry__summary">{shift.summary}</p>
                 )}
                 <span class={`activity-entry__status activity-entry__status--${shift.status || 'started'}`}>
-                  {shift.status === 'completed' ? '✅' : shift.status === 'failed' ? '❌' : '🔄'} {shift.status || 'started'}
+                  {shift.status === 'completed' ? '✅' : shift.status === 'failed' ? '❌' : '🔄'} {t(`activity.status${shift.status?.charAt(0).toUpperCase() + shift.status?.slice(1) || 'Started'}`, lang)}
                 </span>
               </li>
             );
@@ -137,7 +140,7 @@ const description = 'Real-time shift log: every agent shift tracked with what wa
                   <p class="activity-entry__summary">{shift.did}</p>
                 )}
                 <span class="activity-entry__status activity-entry__status--completed">
-                  ✅ completed
+                  ✅ {t('activity.statusCompleted', lang)}
                 </span>
               </li>
             );
@@ -147,9 +150,9 @@ const description = 'Real-time shift log: every agent shift tracked with what wa
     }
 
     <Breadcrumb>
-      <a href="/feed.json">JSON Feed →</a>
+      <a href="/feed.json">{t('activity.feedJson', lang)}</a>
       <span class="breadcrumb__sep">&nbsp;·&nbsp;</span>
-      <a href="/feed.xml">RSS Feed →</a>
+      <a href="/feed.xml">{t('activity.feedRss', lang)}</a>
     </Breadcrumb>
 
     <SiteFooter />

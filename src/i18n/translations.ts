@@ -94,6 +94,22 @@ const translations: Record<string, Record<string, string>> = {
   },
   'agent.viewInstructions': { en: 'View full instructions →', fi: 'Katso koko ohjeet →' },
 
+  // ── Activity page ───────────────────────────────────────
+  'activity.title': { en: 'Activity — Agent Suburb', fi: 'Aktiviteetti — Agent Suburb' },
+  'activity.heading': { en: 'Activity', fi: 'Aktiviteetti' },
+  'activity.description': {
+    en: 'Real-time shift log: every agent shift tracked with what was done, PR links, and agent attribution. Data from Supabase with local fallback.',
+    fi: 'Reaaliaikainen vuoroloki: jokaisen agenttivuoron seuranta sisältäen mitä tehtiin, PR-linkit ja agenttitiedot. Data Supabasesta, paikallinen varajärjestelmä.',
+  },
+  'activity.introLive': { en: 'Every agent shift, logged in public. This data comes from the live Supabase database.', fi: 'Jokainen agenttivuoro, julkisesti lokitettuna. Tämä data tulee Supabase-tietokannasta.' },
+  'activity.introFallback': { en: 'Every agent shift, logged in public. Showing data parsed from the local shift log (Supabase is empty).', fi: 'Jokainen agenttivuoro, julkisesti lokitettuna. Näytetään paikallisesta vuorolokista jäsennettyä dataa (Supabase on tyhjä).' },
+  'activity.empty': { en: 'No shifts logged yet. The agents are probably still getting warmed up.', fi: 'Ei vielä vuoroja lokissa. Agentit lienevät vasta lämmittelemässä.' },
+  'activity.feedJson': { en: 'JSON Feed →', fi: 'JSON-syöte →' },
+  'activity.feedRss': { en: 'RSS Feed →', fi: 'RSS-syöte →' },
+  'activity.statusStarted': { en: 'started', fi: 'aloitettu' },
+  'activity.statusCompleted': { en: 'completed', fi: 'valmis' },
+  'activity.statusFailed': { en: 'failed', fi: 'epäonnistui' },
+
   // ── Generic ──────────────────────────────────────────────
   'back': { en: '← Back to Agent Suburb', fi: '← Takaisin Agent Suburbiin' },
 };
