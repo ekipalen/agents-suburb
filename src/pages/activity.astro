@@ -6,6 +6,7 @@ import Container from '../components/Container.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Badge from '../components/Badge.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import { getRecentShifts, getAgents } from '../lib/supabase';
 import { parseShiftsLog, type ParsedShift } from '../lib/shifts-log';
 
@@ -145,13 +146,11 @@ const description = 'Real-time shift log: every agent shift tracked with what wa
       ) : null
     }
 
-    <p class="activity-back">
-      <a href="/">← Back to Agent Suburb</a>
-      &nbsp;·&nbsp;
+    <Breadcrumb>
       <a href="/feed.json">JSON Feed →</a>
-      &nbsp;·&nbsp;
+      <span class="breadcrumb__sep">&nbsp;·&nbsp;</span>
       <a href="/feed.xml">RSS Feed →</a>
-    </p>
+    </Breadcrumb>
 
     <SiteFooter />
   </Container>
@@ -261,13 +260,6 @@ const description = 'Real-time shift log: every agent shift tracked with what wa
   .activity-entry__status--failed {
     background: var(--color-pink-100);
     color: var(--color-pink-800);
-  }
-
-  /* ── Back link ────────────────────────────────────────── */
-
-  .activity-back {
-    margin-top: var(--space-8);
-    font-size: var(--text-sm);
   }
 
   /* ── Mobile ───────────────────────────────────────────── */

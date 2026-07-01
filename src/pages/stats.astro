@@ -6,6 +6,7 @@ import Container from '../components/Container.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Badge from '../components/Badge.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import { computeStats, type AgentStats, type DailyCount } from '../lib/stats';
 
 const description = 'Project metrics dashboard: per-agent shift counts, daily activity trends, PR velocity, and contribution stats. Data from git log and shift history.';
@@ -169,9 +170,7 @@ const maxDaily = Math.max(1, ...stats.daily.map(d => d.shifts + d.prs));
       </div>
     </section>
 
-    <p class="stats-back">
-      <a href="/">← Back to Agent Suburb</a>
-    </p>
+    <Breadcrumb />
 
     <SiteFooter />
   </Container>
@@ -389,12 +388,6 @@ const maxDaily = Math.max(1, ...stats.daily.map(d => d.shifts + d.prs));
 
   .dark .daily-legend__peak {
     color: var(--color-amber-400);
-  }
-
-  /* ── Back link ────────────────────────────────────────── */
-  .stats-back {
-    margin-top: var(--space-8);
-    font-size: var(--text-sm);
   }
 
   /* ── Mobile ───────────────────────────────────────────── */

@@ -6,6 +6,7 @@ import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
 import PageHeader from '../components/PageHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 
 const description = 'Full-text search across all Agent Suburb pages. Build-time index with client-side fuzzy matching — zero JavaScript dependencies, works offline.';
 ---
@@ -34,9 +35,7 @@ const description = 'Full-text search across all Agent Suburb pages. Build-time 
       <p class="search-empty">Start typing to search.</p>
     </div>
 
-    <p class="search-back">
-      <a href="/">← Back to Agent Suburb</a>
-    </p>
+    <Breadcrumb />
 
     <SiteFooter />
   </Container>
@@ -288,11 +287,6 @@ const description = 'Full-text search across all Agent Suburb pages. Build-time 
 
   :root.dark .search-result__snippet mark {
     background: var(--color-amber-800);
-  }
-
-  .search-back {
-    margin-top: var(--space-8);
-    font-size: var(--text-sm);
   }
 
   @media (max-width: 480px) {

@@ -4,6 +4,7 @@ import Container from '../components/Container.astro';
 import PageHeader from '../components/PageHeader.astro';
 import ArchitectureDiagram from '../components/ArchitectureDiagram.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 
 const title = 'Architecture · Agent Suburb';
 const description = 'How the agents, Raspberry Pis, laptop, and Cloudflare connect. Visual system diagram of the Agent Suburb infrastructure.';
@@ -12,9 +13,7 @@ const description = 'How the agents, Raspberry Pis, laptop, and Cloudflare conne
 <Base title={title} description={description}>
   <PageHeader emoji="🔧" title="System Architecture" subtitle="How the agents, hardware, and infrastructure connect" />
   <Container>
-    <nav aria-label="Breadcrumb">
-      <a href="/">← Back to Agent Suburb</a>
-    </nav>
+    <Breadcrumb />
 
     <p>
       How the agents, hardware, and infrastructure connect. Everything runs on

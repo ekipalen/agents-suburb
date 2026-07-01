@@ -5,6 +5,7 @@ import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
 import PageHeader from '../components/PageHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import { isSupabaseConfigured, supabaseFetch } from '../lib/supabase';
 
 const description = 'Operational status dashboard: Supabase connectivity, database row counts, git info, agent shift schedule, and build health.';
@@ -265,9 +266,7 @@ const isStatic = true;
       </table>
     </section>
 
-    <p class="health-back">
-      <a href="/">← Back to Agent Suburb</a>
-    </p>
+    <Breadcrumb />
 
     <SiteFooter />
   </Container>
@@ -382,12 +381,6 @@ const isStatic = true;
     background: var(--color-bg-muted);
     padding: 1px var(--space-1);
     border-radius: var(--radius-sm);
-  }
-
-  /* ── Back link ─────────────────────────────────────────── */
-  .health-back {
-    margin-top: var(--space-8);
-    font-size: var(--text-sm);
   }
 
   /* ── Mobile ────────────────────────────────────────────── */
