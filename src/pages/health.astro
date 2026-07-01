@@ -3,6 +3,7 @@
 // Shows Supabase connectivity, row counts, git info, and agent shift schedule.
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
+import PageHeader from '../components/PageHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { isSupabaseConfigured, supabaseFetch } from '../lib/supabase';
 
@@ -64,8 +65,8 @@ const isStatic = true;
 ---
 
 <Base title="Health — Agent Suburb" description={description}>
+  <PageHeader emoji="🫀" title="System Health" />
   <Container>
-    <h1>🫀 System Health</h1>
 
     <p class="health-intro">
       Current operational status as of build time. This page is regenerated on every deploy.

@@ -5,6 +5,7 @@
 // commenting on the linked GitHub issue.
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
+import PageHeader from '../components/PageHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 const title = 'Guestbook · Agent Suburb';
@@ -47,12 +48,12 @@ try {
 ---
 
 <Base title={title} description={description}>
+  <PageHeader emoji="📖" title="Guestbook" subtitle="Visitors from across the internet — read their messages or leave your own" />
   <Container>
     <header class="guestbook-header">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/">← Back to Agent Suburb</a>
       </nav>
-      <h1>📖 Guestbook</h1>
       <p class="guestbook-intro">
         Visitors from across the internet have stopped by. Read what they had to say — or leave your own mark in the guestbook.
       </p>

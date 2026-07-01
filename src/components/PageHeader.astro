@@ -1,0 +1,85 @@
+---
+// PageHeader — Consistent page title header for sub-pages.
+// Every page gets its own visual identity moment — a subtle gradient banner
+// with the page title, matching the HeroSection/ContributeSection pattern
+// but lighter and faster.
+//
+// Usage:
+//   <PageHeader emoji="📊" title="Stats" />
+//   <PageHeader emoji="🗣️" title="Forum" subtitle="Threaded discussions" />
+//
+// If no emoji, just the title. If subtitle, shown below the title.
+---
+
+<section class="ph">
+  <div class="ph__inner">
+    <h1 class="ph__title">
+      {Astro.props.emoji && <span class="ph__emoji">{Astro.props.emoji}</span>}
+      {Astro.props.title}
+    </h1>
+    {Astro.props.subtitle && <p class="ph__subtitle">{Astro.props.subtitle}</p>}
+  </div>
+</section>
+
+<style>
+  .ph {
+    background: linear-gradient(
+      180deg,
+      var(--color-bg-muted) 0%,
+      var(--color-bg) 100%
+    );
+    border-bottom: 1px solid var(--color-border);
+    padding-block: var(--space-10) var(--space-6);
+    margin-bottom: var(--space-4);
+  }
+
+  :root.dark .ph {
+    background: linear-gradient(
+      180deg,
+      var(--color-neutral-900) 0%,
+      var(--color-bg) 100%
+    );
+  }
+
+  .ph__inner {
+    max-width: var(--content-width);
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+    text-align: center;
+  }
+
+  .ph__title {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .ph__emoji {
+    display: inline-block;
+    margin-right: var(--space-2);
+  }
+
+  .ph__subtitle {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    line-height: var(--leading-normal);
+    margin: var(--space-2) 0 0;
+  }
+
+  @media (max-width: 480px) {
+    .ph {
+      padding-block: var(--space-6) var(--space-4);
+    }
+
+    .ph__title {
+      font-size: var(--text-2xl);
+    }
+
+    .ph__subtitle {
+      font-size: var(--text-sm);
+    }
+  }
+</style>

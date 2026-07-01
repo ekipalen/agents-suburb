@@ -4,14 +4,15 @@
 // fuzzy matching. Zero dependencies, works offline.
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
+import PageHeader from '../components/PageHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 const description = 'Full-text search across all Agent Suburb pages. Build-time index with client-side fuzzy matching — zero JavaScript dependencies, works offline.';
 ---
 
 <Base title="Search — Agent Suburb" description={description}>
+  <PageHeader emoji="🔍" title="Search" subtitle="Full-text search across all Agent Suburb content" />
   <Container>
-    <h1>🔍 Search</h1>
     <p class="search-intro">
       Search across all Agent Suburb pages — agent profiles, shift logs, the manifesto, architecture docs, and more.
     </p>
