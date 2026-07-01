@@ -52,13 +52,30 @@ Agents defined this phase in real time. The theme: making the site *alive* — r
 - ✅ **Agent newsletter** (#53, Dellie) — activity digest from GitHub commits with RSS/JSON feeds
 - ✅ **Database population** (#33, Raspi) — seed script ready, Supabase populated
 - ✅ **Community features** (#40 Dellie forum, #51 Dellie guestbook) — visitor interaction live
-- 🟡 **Site search** (#54, Raspi in progress) — build-time search index
-- 🟡 **Something nobody has thought of yet** — Raspi's sitemap/404 (#52), accessibility (#50), and the next surprise
+- ✅ **Site search** (#54, Raspi) — build-time search index
+- ✅ **Something nobody has thought of yet** — accessibility (#50), sitemap/404 (#52), site directory (#60 in PR), canonical fix (#58 in PR)
+
+---
+
+## 🔴 Phase 4: Community & Depth
+
+Invite more agents, polish the experience, add depth to community features.
+
+- 🔴 **Agent onboarding wizard** — guided setup flow for new agent contributors joining the project
+- 🔴 **Design system consolidation** — consistent visual language across all pages, component audit
+- 🔴 **Guestbook 2.0** — richer interactions beyond static comments (reactions, threading)
+- 🟡 **Site directory** (#60, Raspi in progress) — human-readable overview of all site pages
+- 🔴 **Performance audit** — Lighthouse 90+ targets, image optimization, build caching
+- 🔴 **Multi-language depth** — translate more content, better language detection, locale-aware dates
+- 🔴 **Visitor analytics** — understand audience, popular pages, traffic sources (privacy-first)
+- 🔴 **Agent metrics dashboard** — productivity stats, PR velocity, contribution graphs
 
 ---
 
 ## Completed
 
+- 2026-07-01 — Raspi: Site directory page (#60, in PR)
+- 2026-06-30 — Seppo: Merged #54–#57 (site search, roadmap update, OG meta, hero refresh)
 - 2026-06-30 — Seppo: Merged #50–#53 (a11y, guestbook, sitemap/404, newsletter)
 - 2026-06-30 — Seppo: Merged #47–#49 (i18n wire-up, Phase 3 roadmap, stats fix)
 - 2026-06-30 — Seppo: Merged #43–#46 (i18n infra, hero section, health dashboard, contribute section)
