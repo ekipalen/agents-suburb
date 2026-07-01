@@ -20,6 +20,17 @@ export interface DailyCount {
   prs: number;
 }
 
+export interface TimelinePoint {
+  date: string; // YYYY-MM-DD
+  cumulative: number;
+}
+
+export interface AgentTimeline {
+  id: string;
+  name: string;
+  points: TimelinePoint[];
+}
+
 export interface StatsData {
   totalShifts: number;
   totalPRs: number;
@@ -27,6 +38,7 @@ export interface StatsData {
   daily: DailyCount[];
   busiestDay: DailyCount | null;
   latestShift: string | null;
+  prTimelines: AgentTimeline[]; // cumulative PR velocity per agent
 }
 
 const AGENT_NAMES: Record<string, string> = {
@@ -133,11 +145,60 @@ function buildDailyCounts(shifts: ParsedShift[]): DailyCount[] {
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
+function buildPRTimelines(): AgentTimeline[] {
+  try {
+    const log = execSync(
+      'git log main --format="%cI %s"',
+      { encoding: 'utf-8', timeout: 5000 },
+    );
+    // Collect [Agent]-prefixed PR commits with dates
+    const commits: { date: string; agent: string }[] = [];
+    for (const line of log.split('\n').reverse()) {
+      // Skip merge commits and Seppo memory commits
+      if (line.startsWith('Merge PR') || line.startsWith('Merge pull request')) continue;
+      if (line.includes('[Seppo] memory:')) continue;
+      const dateMatch = line.match(/^(\d{4}-\d{2}-\d{2})/);
+      const agentMatch = line.match(/^.{11}.*?\[(Raspi|Seppo|Dellie)\]/i);
+      if (dateMatch && agentMatch) {
+        commits.push({ date: dateMatch[1], agent: agentMatch[1].toLowerCase() });
+      }
+    }
+
+    // Build cumulative per agent
+    const agents = new Set(commits.map(c => c.agent));
+    const timelines: AgentTimeline[] = [];
+    for (const agentId of agents) {
+      let cumulative = 0;
+      const points: TimelinePoint[] = commits
+        .filter(c => c.agent === agentId)
+        .map(c => {
+          cumulative++;
+          return { date: c.date, cumulative };
+        });
+      timelines.push({
+        id: agentId,
+        name: AGENT_NAMES[agentId] || agentId,
+        points,
+      });
+    }
+    // Sort by final cumulative count descending
+    timelines.sort((a, b) => {
+      const aMax = a.points.length > 0 ? a.points[a.points.length - 1].cumulative : 0;
+      const bMax = b.points.length > 0 ? b.points[b.points.length - 1].cumulative : 0;
+      return bMax - aMax;
+    });
+    return timelines;
+  } catch {
+    return [];
+  }
+}
+
 export function computeStats(): StatsData {
   const shifts = parseShiftsLog();
   const prCounts = countPRsPerAgent();
   const agents = buildAgentStats(shifts, prCounts);
   const daily = buildDailyCounts(shifts);
+  const prTimelines = buildPRTimelines();
 
   const busiestDay = daily.length > 0
     ? daily.reduce((best, d) => (d.shifts + d.prs > best.shifts + best.prs ? d : best), daily[0])
@@ -150,5 +211,6 @@ export function computeStats(): StatsData {
     daily,
     busiestDay,
     latestShift: shifts.length > 0 ? shifts[0].started_at : null,
+    prTimelines,
   };
 }
