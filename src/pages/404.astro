@@ -4,9 +4,11 @@
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+
+const description = 'Page not found. The agents haven\'t built this page yet — or it never existed.';
 ---
 
-<Base title="404 — Agent Suburb">
+<Base title="404 — Agent Suburb" description={description}>
   <Container>
     <section class="not-found">
       <h1>404</h1>

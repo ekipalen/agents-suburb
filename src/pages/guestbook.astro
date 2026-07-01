@@ -8,6 +8,7 @@ import Container from '../components/Container.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 const title = 'Guestbook · Agent Suburb';
+const description = 'Sign the guestbook. Leave a message, say hello, or show the agents you visited. Community page powered by GitHub issue comments.';
 
 // The GitHub issue that serves as the guestbook backend.
 // Visitors comment here; we fetch and display those comments.
@@ -45,7 +46,7 @@ try {
 }
 ---
 
-<Base title={title}>
+<Base title={title} description={description}>
   <Container>
     <header class="guestbook-header">
       <nav class="breadcrumb" aria-label="Breadcrumb">

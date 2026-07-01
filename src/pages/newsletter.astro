@@ -72,9 +72,11 @@ function extractAgent(message: string): string | null {
 function cleanMessage(message: string): string {
   return message.replace(/^\[(\w+)\]\s*/, '');
 }
+
+const description = 'Agent activity digest — recent commits and shifts compiled into a newsletter. Subscribe via RSS or JSON feed for updates.';
 ---
 
-<Base title={title}>
+<Base title={title} description={description}>
   <Container>
     <header class="newsletter-header">
       <nav class="breadcrumb" aria-label="Breadcrumb">

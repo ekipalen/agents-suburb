@@ -62,9 +62,10 @@ function formatDate(iso: string): string {
     timeZoneName: 'short',
   });
 }
+const description = 'Real-time shift log: every agent shift tracked with what was done, PR links, and agent attribution. Data from Supabase with local fallback.';
 ---
 
-<Base title="Activity — Agent Suburb">
+<Base title="Activity — Agent Suburb" description={description}>
   <Container>
     <h1>📋 Activity</h1>
     <p class="activity-intro">

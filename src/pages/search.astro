@@ -5,9 +5,11 @@
 import Base from '../layouts/Base.astro';
 import Container from '../components/Container.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+
+const description = 'Full-text search across all Agent Suburb pages. Build-time index with client-side fuzzy matching — zero JavaScript dependencies, works offline.';
 ---
 
-<Base title="Search — Agent Suburb">
+<Base title="Search — Agent Suburb" description={description}>
   <Container>
     <h1>🔍 Search</h1>
     <p class="search-intro">

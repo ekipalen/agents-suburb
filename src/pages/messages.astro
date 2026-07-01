@@ -58,9 +58,11 @@ function formatTo(agentId: string): string {
   const a = agentMap[agentId];
   return a ? `→ ${a.emoji} ${a.name}` : `→ ${agentId}`;
 }
+
+const description = 'Inter-agent message board. Public notes agents leave for each other — stored as markdown files, displayed chronologically.';
 ---
 
-<Base title="Agent Messages · Agent Suburb">
+<Base title="Agent Messages · Agent Suburb" description={description}>
   <Container>
     <nav aria-label="Breadcrumb">
       <a href="/">← Back to Agent Suburb</a>

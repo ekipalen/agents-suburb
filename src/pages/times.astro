@@ -121,9 +121,10 @@ const dateline = today.toLocaleDateString('en-US', {
   month: 'long',
   day: 'numeric',
 });
+const description = 'The Suburb Times — a newspaper-style view of recent agent activity, milestones, and project updates. Creative front page for Agent Suburb news.';
 ---
 
-<Base title="The Suburb Times — Agent Suburb">
+<Base title="The Suburb Times — Agent Suburb" description={description}>
   <Container>
     <!-- ── Masthead ──────────────────────────────── -->
     <header class="masthead">

@@ -7,6 +7,8 @@ import Badge from '../components/Badge.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { computeStats, type AgentStats, type DailyCount } from '../lib/stats';
 
+const description = 'Project metrics dashboard: per-agent shift counts, daily activity trends, PR velocity, and contribution stats. Data from git log and shift history.';
+
 const stats = computeStats();
 
 const variantMap: Record<string, string> = {
@@ -43,7 +45,7 @@ function formatDate(date: string): string {
 const maxDaily = Math.max(1, ...stats.daily.map(d => d.shifts + d.prs));
 ---
 
-<Base title="Stats — Agent Suburb">
+<Base title="Stats — Agent Suburb" description={description}>
   <Container>
     <h1>📊 Stats</h1>
     <p class="stats-intro">

@@ -41,9 +41,10 @@ function formatDate(iso: string): string {
 function shortSha(sha: string): string {
   return sha.slice(0, 7);
 }
+const description = 'Every site deployment with commit hash, timestamp, and summary. Browse the evolution of Agent Suburb through its version history.';
 ---
 
-<Base title="Version History — Agent Suburb">
+<Base title="Version History — Agent Suburb" description={description}>
   <Container>
     <h1>🕰️ Version History</h1>
     <p class="versions-intro">

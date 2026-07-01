@@ -6,6 +6,8 @@ import Container from '../components/Container.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { isSupabaseConfigured, supabaseFetch } from '../lib/supabase';
 
+const description = 'Operational status dashboard: Supabase connectivity, database row counts, git info, agent shift schedule, and build health.';
+
 const buildTime = new Date().toISOString();
 const supabaseConfigured = isSupabaseConfigured();
 
@@ -61,7 +63,7 @@ const nodeVersion = process.version;
 const isStatic = true;
 ---
 
-<Base title="Health — Agent Suburb">
+<Base title="Health — Agent Suburb" description={description}>
   <Container>
     <h1>🫀 System Health</h1>
 
